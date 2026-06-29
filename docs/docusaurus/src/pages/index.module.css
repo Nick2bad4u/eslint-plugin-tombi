@@ -3,7 +3,7 @@
     overflow: clip;
     padding: 4.35rem 0 3.25rem;
     border-block-end: 1px solid rgb(255 255 255 / 18%);
-    background: linear-gradient(140deg, #10231f 0%, #065f46 46%, #164e63 100%);
+    background: linear-gradient(140deg, #082f49 0%, #155e75 46%, #0f766e 100%);
     color: #ffffff;
 }
 
@@ -103,7 +103,7 @@
 
 .heroActionPrimary {
     border-color: rgb(224 231 255 / 36%);
-    background: #059669;
+    background: #0891b2;
     color: #ffffff;
 }
 
@@ -114,15 +114,15 @@
 }
 
 .heroActionSecondary {
-    border-color: rgb(167 243 208 / 38%);
+    border-color: rgb(103 232 249 / 38%);
     background: rgb(15 23 42 / 30%);
-    color: rgb(236 253 245);
+    color: rgb(236 254 255);
 }
 
 .heroActionSecondary:hover,
 .heroActionSecondary:focus,
 .heroActionSecondary:visited {
-    color: rgb(236 253 245);
+    color: rgb(236 254 255);
 }
 
 .heroPanel {
@@ -208,7 +208,7 @@
 
 .card:hover,
 .card:focus {
-    border-color: rgb(5 150 105 / 35%);
+    border-color: rgb(8 145 178 / 35%);
     box-shadow: var(--ifm-global-shadow-md);
     transform: translateY(-2px);
 }
@@ -226,10 +226,10 @@
     place-items: center;
     block-size: 2.1rem;
     inline-size: 2.1rem;
-    border: 1px solid rgb(5 150 105 / 20%);
+    border: 1px solid rgb(8 145 178 / 20%);
     border-radius: 0.5rem;
-    background: rgb(5 150 105 / 10%);
-    color: #047857;
+    background: rgb(8 145 178 / 10%);
+    color: #0e7490;
     font-family:
         "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
     font-size: 1.12rem;

@@ -15,6 +15,7 @@ const sidebars = {
                 "guides/intro",
                 "guides/getting-started",
                 "guides/tombi-bridge",
+                "guides/config-authoring",
                 "guides/tool-to-rule-map",
                 "guides/faq",
             ],
@@ -35,6 +36,12 @@ const sidebars = {
                     className: "sb-preset-only",
                     id: "presets/tombi-only",
                     label: "🧪 Tombi bridge only",
+                    type: "doc",
+                },
+                {
+                    className: "sb-preset-configuration",
+                    id: "presets/configuration",
+                    label: "🔧 Configuration",
                     type: "doc",
                 },
                 {
@@ -69,7 +76,16 @@ const sidebars = {
         {
             className: "sb-cat-rules",
             collapsed: false,
-            items: ["tombi"],
+            items: [
+                "tombi",
+                "require-tombi-config-file-naming-convention",
+                "disallow-tombi-unknown-config-properties",
+                "disallow-tombi-empty-files-include",
+                "disallow-tombi-empty-files-exclude",
+                "prefer-tombi-files-include-array",
+                "require-tombi-valid-lint-rule-levels",
+                "prefer-tombi-builtin-schema-catalog",
+            ],
             label: "📜 Rules",
             link: {
                 slug: "/",

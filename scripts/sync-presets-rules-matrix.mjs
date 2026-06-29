@@ -27,6 +27,12 @@ const presetDocsByName = {
         path: resolve("docs", "rules", "presets", "check.md"),
         publicName: "tombi.configs.check",
     },
+    configuration: {
+        href: "./configuration.md",
+        icon: "🔧",
+        path: resolve("docs", "rules", "presets", "configuration.md"),
+        publicName: "tombi.configs.configuration",
+    },
     format: {
         href: "./format.md",
         icon: "🔧",
@@ -59,6 +65,7 @@ const presetDocsByName = {
 const presetOrder = [
     "recommended",
     "tombiOnly",
+    "configuration",
     "lint",
     "check",
     "format",

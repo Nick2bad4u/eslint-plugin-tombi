@@ -10,15 +10,16 @@ The plugin does not reimplement Tombi configuration. Put TOML behavior in `tombi
 
 ## Rule groups
 
-| Group          | Use it for                                                            |
-| -------------- | --------------------------------------------------------------------- |
-| Bridge linting | Surface `tombi lint` diagnostics in ESLint output.                    |
-| Format checks  | Report when `tombi format` would change a file.                       |
-| Fixes          | Apply Tombi formatting through `eslint --fix`.                        |
-| Cache control  | Keep Tombi schema/catalog cache data local with a 30-day default TTL. |
+| Group            | Use it for                                                            |
+| ---------------- | --------------------------------------------------------------------- |
+| Bridge linting   | Surface `tombi lint` diagnostics in ESLint output.                    |
+| Format checks    | Report when `tombi format` would change a file.                       |
+| Fixes            | Apply Tombi formatting through `eslint --fix`.                        |
+| Config authoring | Catch common standalone `tombi.toml` setup mistakes.                  |
+| Cache control    | Keep Tombi schema/catalog cache data local with a 30-day default TTL. |
 
 ## Recommended path
 
-Start with `tombi.configs.recommended`. It enables `tombi/tombi` for `**/*.toml` and `**/Cargo.lock`, checks formatting, reports lint diagnostics, and can apply formatting fixes.
+Start with `tombi.configs.recommended`. It enables `tombi/tombi` for `**/*.toml` and `**/Cargo.lock`, checks formatting, reports lint diagnostics, can apply formatting fixes, and applies low-noise Tombi config checks to standalone config files.
 
-Use `tombi.configs.lint`, `tombi.configs.check`, or `tombi.configs.format` only when a repository needs a narrower job split.
+Use `tombi.configs.lint`, `tombi.configs.check`, `tombi.configs.format`, or `tombi.configs.configuration` only when a repository needs a narrower job split.

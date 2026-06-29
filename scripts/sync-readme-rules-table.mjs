@@ -18,6 +18,11 @@ const presetDocsByName = {
         icon: "✅",
         publicName: "tombi.configs.check",
     },
+    configuration: {
+        href: "./docs/rules/presets/configuration.md",
+        icon: "🔧",
+        publicName: "tombi.configs.configuration",
+    },
     format: {
         href: "./docs/rules/presets/format.md",
         icon: "🔧",
@@ -42,6 +47,7 @@ const presetDocsByName = {
 const presetOrder = [
     "recommended",
     "tombiOnly",
+    "configuration",
     "lint",
     "check",
     "format",

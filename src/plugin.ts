@@ -5,16 +5,24 @@ import * as tomlParser from "toml-eslint-parser";
 // eslint-disable-next-line import-x/extensions -- Node JSON import attributes require the file extension at runtime.
 import packageJson from "../package.json" with { type: "json" };
 import { tombiRules } from "./_internal/rules-registry.js";
+import {
+    type TombiConfigName as InternalTombiConfigName,
+    tombiConfigMetadataByName,
+} from "./_internal/tombi-config-references.js";
 
 /**
  * TombiConfigName tombi config name contract.
  */
-export type TombiConfigName =
-    "all" | "check" | "format" | "lint" | "recommended" | "tombiOnly" | "toml";
+export type TombiConfigName = InternalTombiConfigName;
 
 const pluginName = "eslint-plugin-tombi" as const;
 const pluginNamespace = "tombi" as const;
 const bridgeFiles = ["**/*.toml", "**/Cargo.lock"] as const;
+const configFiles = [
+    "**/.config/tombi.toml",
+    "**/.tombi.toml",
+    "**/tombi.toml",
+] as const;
 
 /**
  * TombiConfig tombi config contract.
@@ -32,6 +40,7 @@ export type TombiRuleId = `tombi/${TombiRuleName}`;
  * TombiRuleName tombi rule name contract.
  */
 export type TombiRuleName = keyof typeof tombiRules;
+type FlatConfigRules = NonNullable<Linter.Config["rules"]>;
 
 const eslintPluginRules: typeof tombiRules = tombiRules;
 const version =
@@ -49,6 +58,8 @@ const tombiPlugin: {
     configs: {
         all: [],
         check: {},
+        configs: {},
+        configuration: {},
         format: {},
         lint: {},
         recommended: [],
@@ -67,7 +78,7 @@ const tombiOnlyPreset: Linter.Config = {
     files: [...bridgeFiles],
 
     languageOptions: { parser: tomlParser },
-    name: "tombi:tombiOnly",
+    name: tombiConfigMetadataByName.tombiOnly.presetName,
     plugins: { [pluginNamespace]: tombiPluginForEslint },
     rules: { "tombi/tombi": "error" },
 };
@@ -92,12 +103,46 @@ const formatPreset: Linter.Config = {
     },
 };
 
+const configurationRules = {
+    "tombi/disallow-tombi-empty-files-exclude": "warn",
+    "tombi/disallow-tombi-empty-files-include": "warn",
+    "tombi/disallow-tombi-unknown-config-properties": "warn",
+    "tombi/prefer-tombi-builtin-schema-catalog": "warn",
+    "tombi/prefer-tombi-files-include-array": "warn",
+    "tombi/require-tombi-config-file-naming-convention": "warn",
+    "tombi/require-tombi-valid-lint-rule-levels": "warn",
+} as const satisfies FlatConfigRules;
+
+const recommendedConfigurationRules = {
+    "tombi/disallow-tombi-empty-files-exclude": "warn",
+    "tombi/disallow-tombi-empty-files-include": "warn",
+    "tombi/disallow-tombi-unknown-config-properties": "warn",
+    "tombi/require-tombi-config-file-naming-convention": "warn",
+    "tombi/require-tombi-valid-lint-rule-levels": "warn",
+} as const satisfies FlatConfigRules;
+
+const configurationPreset: Linter.Config = {
+    files: [...configFiles],
+    languageOptions: { parser: tomlParser },
+    name: tombiConfigMetadataByName.configuration.presetName,
+    plugins: { [pluginNamespace]: tombiPluginForEslint },
+    rules: configurationRules,
+};
+
+const recommendedConfigurationPreset: Linter.Config = {
+    ...configurationPreset,
+    name: tombiConfigMetadataByName.recommended.presetName,
+    rules: recommendedConfigurationRules,
+};
+
 tombiPlugin.configs = {
-    all: tombiOnlyPreset,
+    all: [tombiOnlyPreset, configurationPreset],
     check: checkPreset,
+    configs: configurationPreset,
+    configuration: configurationPreset,
     format: formatPreset,
     lint: lintPreset,
-    recommended: tombiOnlyPreset,
+    recommended: [tombiOnlyPreset, recommendedConfigurationPreset],
     tombiOnly: tombiOnlyPreset,
     toml: tombiOnlyPreset,
 };

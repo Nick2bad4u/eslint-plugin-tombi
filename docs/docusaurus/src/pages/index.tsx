@@ -53,8 +53,9 @@ const heroStats = [
         headline: "Tombi bridge",
     },
     {
-        description: "Split lint, check, and format jobs when CI needs it.",
-        headline: "6 Presets",
+        description:
+            "Split lint, check, format, and config-authoring jobs when CI needs it.",
+        headline: "7 Presets",
     },
     {
         description: "Default cache TTL for remote schemas and catalogs.",
@@ -99,11 +100,11 @@ const homeCards = [
         actionLabel: "Compare presets",
         bullets: [
             "🟡 Recommended TOML checks",
+            "🔧 Config-authoring checks",
             "🚦 Lint-only jobs",
-            "🔧 Format-fix jobs",
         ],
         description:
-            "Compare recommended, lint-only, check-only, format-only, and alias presets.",
+            "Compare recommended, config-authoring, lint-only, check-only, format-only, and alias presets.",
         icon: "🛠️",
         title: "Presets",
         to: "/docs/rules/presets",
@@ -113,10 +114,11 @@ const homeCards = [
         bullets: [
             "TOML diagnostics",
             "Format checks",
+            "Config setup checks",
             "Schema cache options",
         ],
         description:
-            "Browse the bridge rule with concrete ESLint and Tombi examples.",
+            "Browse the bridge and config rules with concrete ESLint and Tombi examples.",
         icon: "📜",
         title: "Rule Reference",
         to: "/docs/rules",

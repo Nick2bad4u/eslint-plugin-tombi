@@ -10,6 +10,8 @@ import tombiPlugin, {
 const expectedConfigNames = [
     "all",
     "check",
+    "configs",
+    "configuration",
     "format",
     "lint",
     "recommended",
@@ -29,21 +31,18 @@ const firstConfig = (config: TombiConfig): Linter.Config =>
 
 describe("tombi plugin configs", () => {
     it("exports exactly the supported config keys", () => {
-        expect.assertions(2);
+        expect.assertions(1);
 
         expect(toNameSet(Object.keys(tombiPlugin.configs))).toStrictEqual(
             toNameSet(expectedConfigNames)
         );
-        expect(tombiPlugin.configs).not.toHaveProperty("configuration");
     });
 
     it("keeps primary aliases wired to the recommended bridge preset", () => {
         expect.assertions(3);
 
-        expect(tombiPlugin.configs.all).toBe(tombiPlugin.configs.tombiOnly);
-        expect(tombiPlugin.configs.recommended).toBe(
-            tombiPlugin.configs.tombiOnly
-        );
+        expect(Array.isArray(tombiPlugin.configs.all)).toBe(true);
+        expect(Array.isArray(tombiPlugin.configs.recommended)).toBe(true);
         expect(tombiPlugin.configs.toml).toBe(tombiPlugin.configs.tombiOnly);
     });
 
@@ -71,5 +70,23 @@ describe("tombi plugin configs", () => {
                 { check: true, format: true, lint: false },
             ],
         });
+    });
+
+    it("exposes a configuration preset alias for standalone Tombi configs", () => {
+        expect.assertions(3);
+
+        const config = firstConfig(tombiPlugin.configs.configuration);
+
+        expect(tombiPlugin.configs.configs).toBe(
+            tombiPlugin.configs.configuration
+        );
+        expect(config.files).toStrictEqual([
+            "**/.config/tombi.toml",
+            "**/.tombi.toml",
+            "**/tombi.toml",
+        ]);
+        expect(config.rules).toHaveProperty(
+            "tombi/require-tombi-config-file-naming-convention"
+        );
     });
 });

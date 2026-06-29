@@ -1,18 +1,18 @@
 :root {
-    --ifm-color-primary: #059669;
-    --ifm-color-primary-dark: #047857;
-    --ifm-color-primary-darker: #065f46;
-    --ifm-color-primary-darkest: #064e3b;
-    --ifm-color-primary-light: #10b981;
-    --ifm-color-primary-lighter: #34d399;
-    --ifm-color-primary-lightest: #a7f3d0;
+    --ifm-color-primary: #0891b2;
+    --ifm-color-primary-dark: #0e7490;
+    --ifm-color-primary-darker: #155e75;
+    --ifm-color-primary-darkest: #164e63;
+    --ifm-color-primary-light: #06b6d4;
+    --ifm-color-primary-lighter: #22d3ee;
+    --ifm-color-primary-lightest: #a5f3fc;
     --ifm-code-font-size: 95%;
     --ifm-font-family-base:
         Inter, "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont,
         sans-serif;
-    --sb-accent-overview: #22c55e;
+    --sb-accent-overview: #06b6d4;
     --sb-accent-started: #0ea5e9;
-    --sb-accent-guides: #059669;
+    --sb-accent-guides: #0891b2;
     --sb-accent-developer: #8b5cf6;
     --sb-accent-rules: #f97316;
     --sb-accent-presets: #eab308;
@@ -21,18 +21,18 @@
     --sb-prefix-rule-number: #52525b;
     --sb-preset-recommended: #facc15;
     --sb-preset-only: #38bdf8;
-    --sb-preset-configuration: #14b8a6;
+    --sb-preset-configuration: #22d3ee;
     --sb-preset-all: #a855f7;
 }
 
 [data-theme="dark"] {
-    --ifm-color-primary: #6ee7b7;
-    --ifm-color-primary-dark: #34d399;
-    --ifm-color-primary-darker: #10b981;
-    --ifm-color-primary-darkest: #059669;
-    --ifm-color-primary-light: #a7f3d0;
-    --ifm-color-primary-lighter: #d1fae5;
-    --ifm-color-primary-lightest: #ecfdf5;
+    --ifm-color-primary: #67e8f9;
+    --ifm-color-primary-dark: #22d3ee;
+    --ifm-color-primary-darker: #06b6d4;
+    --ifm-color-primary-darkest: #0891b2;
+    --ifm-color-primary-light: #a5f3fc;
+    --ifm-color-primary-lighter: #cffafe;
+    --ifm-color-primary-lightest: #ecfeff;
     --sb-prefix-rule-number: #a1a1aa;
 }
 
@@ -150,7 +150,7 @@
 .sb-cat-guides:not(.menu__list-item--collapsed)
     > .menu__list-item-collapsible
     .menu__link {
-    box-shadow: inset 0 0 0 1px rgb(5 150 105 / 28%);
+    box-shadow: inset 0 0 0 1px rgb(8 145 178 / 28%);
 }
 
 .sb-cat-presets:not(.menu__list-item--collapsed)
@@ -168,7 +168,7 @@
 .sb-cat-rules
     .theme-doc-sidebar-item-link-level-2:nth-child(6n + 1)
     > .menu__link {
-    border-inline-start-color: #059669;
+    border-inline-start-color: #0891b2;
 }
 
 .sb-cat-rules
@@ -224,11 +224,11 @@
 }
 
 .token.jsdoc-tag {
-    color: #059669;
+    color: #0891b2;
     font-style: normal;
     font-weight: 700;
 }
 
 [data-theme="dark"] .token.jsdoc-tag {
-    color: #6ee7b7;
+    color: #67e8f9;
 }
