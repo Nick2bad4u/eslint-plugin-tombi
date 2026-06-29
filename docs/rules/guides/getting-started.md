@@ -6,7 +6,7 @@ Use this checklist when adding the plugin to an existing repository.
 
 - Enable [`tombi.configs.recommended`](../presets/recommended.md) for TOML files that should be linted and formatted.
 - Exclude generated TOML, vendored manifests, and fixtures that intentionally violate style.
-- Keep native Tombi config as the source of truth for TOML behavior.
+- Keep native Tombi config as the source of truth for TOML behavior. See [Local Tombi config](./local-tombi-config.md) for formatter, linter, file, and schema settings.
 
 ## Split jobs only when needed
 

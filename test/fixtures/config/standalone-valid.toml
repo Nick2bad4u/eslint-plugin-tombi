@@ -1,0 +1,19 @@
+toml-version = "v1.0.0"
+
+[files]
+    include = [ "**/*.toml", "Cargo.lock" ]
+    exclude = [ "dist/**", "node_modules/**", "target/**" ]
+
+[format.rules]
+    indent-width       = 4
+    line-width         = 100
+    string-quote-style = "single"
+
+[lint.rules]
+    dotted-keys-out-of-order = "warn"
+    key-empty                = "error"
+    tables-out-of-order      = "warn"
+
+[schema]
+    enabled = true
+    strict  = false

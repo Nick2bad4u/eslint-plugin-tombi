@@ -1,0 +1,14 @@
+[build-system]
+    requires      = [ "hatchling" ]
+    build-backend = "hatchling.build"
+
+[project]
+    name    = "demo"
+    version = "1.0.0"
+
+[tool.tombi.format.rules]
+    indent-width       = 4
+    string-quote-style = "single"
+
+[tool.tombi.lint.rules]
+    key-empty = "error"

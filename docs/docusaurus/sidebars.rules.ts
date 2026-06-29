@@ -15,6 +15,7 @@ const sidebars = {
                 "guides/intro",
                 "guides/getting-started",
                 "guides/tombi-bridge",
+                "guides/local-tombi-config",
                 "guides/config-authoring",
                 "guides/tool-to-rule-map",
                 "guides/faq",

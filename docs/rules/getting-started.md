@@ -22,13 +22,22 @@ The preset matches `**/*.toml` and `**/Cargo.lock`. It checks formatting, report
 
 ## Keep Tombi policy upstream
 
-Use Tombi config for formatter and linter policy:
+Use Tombi config for formatter and linter policy. For most repositories that means adding `tombi.toml`, `.tombi.toml`, `.config/tombi.toml`, or a `[tool.tombi]` table in `pyproject.toml`.
 
 ```toml
+# tombi.toml
 [format.rules]
-indent-table-key-value-pairs = true
 indent-width = 4
+indent-table-key-value-pairs = true
+line-width = 100
+
+[lint.rules]
+dotted-keys-out-of-order = "warn"
+key-empty = "error"
+tables-out-of-order = "warn"
 ```
+
+Tombi documents the discovery order and current options under [configuration search priority](https://tombi-toml.github.io/tombi/docs/configuration#search-priority), [format rules](https://tombi-toml.github.io/tombi/docs/configuration#format-rules), and [lint rules](https://tombi-toml.github.io/tombi/docs/configuration#lint-rules).
 
 Use ESLint options for bridge execution:
 

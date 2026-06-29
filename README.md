@@ -44,6 +44,29 @@ The recommended preset targets `**/*.toml` and `**/Cargo.lock`, wires `toml-esli
 
 Keep Tombi policy in Tombi config files. The bridge invokes Tombi with `--stdin-filename`, so native config discovery still applies for files such as `tombi.toml`, `.tombi.toml`, `.config/tombi.toml`, and `[tool.tombi]` in `pyproject.toml`.
 
+Put formatter and linter options in a local Tombi config instead of trying to encode upstream Tombi policy in ESLint rule options:
+
+```toml
+# tombi.toml
+[format.rules]
+indent-width = 4
+line-width = 100
+string-quote-style = "double"
+
+[lint.rules]
+dotted-keys-out-of-order = "warn"
+key-empty = "error"
+tables-out-of-order = "warn"
+```
+
+See Tombi's configuration reference for the current option list:
+
+- [Search priority](https://tombi-toml.github.io/tombi/docs/configuration#search-priority)
+- [Formatting options](https://tombi-toml.github.io/tombi/docs/configuration#format-rules)
+- [Linting options](https://tombi-toml.github.io/tombi/docs/configuration#lint-rules)
+
+For a fuller walkthrough, see [Local Tombi config](./docs/rules/guides/local-tombi-config.md).
+
 Use ESLint rule options only for bridge behavior:
 
 ```ts

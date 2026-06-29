@@ -31,7 +31,7 @@ export type TombiConfig = Linter.Config | readonly Linter.Config[];
 /**
  * TombiConfigs tombi configs contract.
  */
-export interface TombiConfigs {
+export interface TombiConfigs extends Readonly<Record<string, TombiConfig>> {
     readonly all: TombiConfig;
     readonly check: TombiConfig;
     readonly configs: TombiConfig;
@@ -41,7 +41,6 @@ export interface TombiConfigs {
     readonly recommended: TombiConfig;
     readonly tombiOnly: TombiConfig;
     readonly toml: TombiConfig;
-    readonly [configName: string]: TombiConfig;
 }
 /**
  * TombiRuleId tombi rule id contract.

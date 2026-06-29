@@ -12,6 +12,8 @@ Usually no, if ESLint already runs `tombi/tombi` over the same files. Running bo
 
 Keep formatter, lint, schema, override, and extension settings in Tombi config. Use ESLint config for file selection, severity, fix behavior, cache environment, offline mode, and timeout behavior.
 
+For project formatting and linting policy, create `tombi.toml`, `.tombi.toml`, `.config/tombi.toml`, or `[tool.tombi]` in `pyproject.toml`. Tombi documents the lookup order under [configuration search priority](https://tombi-toml.github.io/tombi/docs/configuration#search-priority), formatting options under [format rules](https://tombi-toml.github.io/tombi/docs/configuration#format-rules), and lint options under [lint rules](https://tombi-toml.github.io/tombi/docs/configuration#lint-rules).
+
 ## Why does the plugin set a cache directory?
 
 Tombi can fetch remote schemas and catalogs. The bridge sets `TOMBI_CACHE_HOME` and a 30-day `TOMBI_CACHE_TTL` by default so repeated ESLint runs do not spam remote schema hosts. Installed packages use `node_modules/.cache/eslint-plugin-tombi/tombi`; source checkouts and unwritable package caches fall back to `.cache/eslint-plugin-tombi/tombi` under the ESLint working directory.

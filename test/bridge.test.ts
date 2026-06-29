@@ -1,5 +1,5 @@
 import { ESLint, type Linter } from "eslint";
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -11,6 +11,10 @@ const bridgeConfig = tombiPlugin.configs.tombiOnly as Linter.Config;
 const fixturesDirectory = fileURLToPath(
     new URL("fixtures/bridge/", import.meta.url)
 );
+const readConfigFixture = (fixtureName: string): string =>
+    readFileSync(new URL(`fixtures/config/${fixtureName}`, import.meta.url), {
+        encoding: "utf8",
+    });
 
 const usingTemporaryDirectory = async <Result>(
     prefix: string,
@@ -168,18 +172,41 @@ describe("tombi bridge rule", () => {
             async (temporaryDirectory) => {
                 writeFileSync(
                     path.join(temporaryDirectory, "tombi.toml"),
-                    "[format.rules]\nindent-table-key-value-pairs = false\n"
+                    readConfigFixture("standalone-valid.toml")
                 );
                 const eslint = createEngine(
                     { lint: false },
                     { cwd: temporaryDirectory, fix: true }
                 );
                 const [result] = await eslint.lintText(
-                    "[package]\nname='demo'\n",
+                    '[package]\nname = "demo"\n',
                     { filePath: path.join(temporaryDirectory, "Cargo.toml") }
                 );
 
-                expect(result?.output).toBe('[package]\nname = "demo"\n');
+                expect(result?.output).toBe("[package]\nname = 'demo'\n");
+            }
+        );
+    }, 30_000);
+
+    it("lets native Tombi discover pyproject tool.tombi configuration", async () => {
+        expect.assertions(1);
+
+        await usingTemporaryDirectory(
+            "tombi-bridge-pyproject-",
+            async (temporaryDirectory) => {
+                writeFileSync(
+                    path.join(temporaryDirectory, "pyproject.toml"),
+                    readConfigFixture("pyproject.toml")
+                );
+                const eslint = createEngine(
+                    { lint: false },
+                    { cwd: temporaryDirectory, fix: true }
+                );
+                const [result] = await eslint.lintText('name = "demo"\n', {
+                    filePath: path.join(temporaryDirectory, "sample.toml"),
+                });
+
+                expect(result?.output).toBe("name = 'demo'\n");
             }
         );
     }, 30_000);

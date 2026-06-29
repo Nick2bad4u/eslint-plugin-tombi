@@ -11,19 +11,35 @@ if (Array.isArray(tomlPreset))
 const localConfigurationPreset = /** @type {import("eslint").Linter.Config} */ (
     tomlPreset
 );
+const allowStripAnsiBanDependenciesRule =
+    /** @type {import("eslint").Linter.RuleEntry} */ ([
+        "error",
+        { allowed: ["strip-ansi"] },
+    ]);
+const sharedConfig = createConfig({
+    allowDefaultProjectFilePatterns: [
+        ".remarkrc.mjs",
+        "eslint.config.mjs",
+        "knip.config.ts",
+        "prettier.config.mjs",
+        "stylelint.config.mjs",
+    ],
+    plugins: { tombi: false },
+}).map((configEntry) => {
+    if (configEntry.rules?.["depend/ban-dependencies"] === undefined)
+        return configEntry;
+    return {
+        ...configEntry,
+        rules: {
+            ...configEntry.rules,
+            "depend/ban-dependencies": allowStripAnsiBanDependenciesRule,
+        },
+    };
+});
 
 /** @type {import("eslint").Linter.Config[]} */
 const config = [
-    ...createConfig({
-        allowDefaultProjectFilePatterns: [
-            ".remarkrc.mjs",
-            "eslint.config.mjs",
-            "knip.config.ts",
-            "prettier.config.mjs",
-            "stylelint.config.mjs",
-        ],
-        plugins: { tombi: false },
-    }),
+    ...sharedConfig,
     {
         ignores: [
             ".github/workflows/**",

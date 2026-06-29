@@ -22,4 +22,6 @@ The plugin does not reimplement Tombi configuration. Put TOML behavior in `tombi
 
 Start with `tombi.configs.recommended`. It enables `tombi/tombi` for `**/*.toml` and `**/Cargo.lock`, checks formatting, reports lint diagnostics, can apply formatting fixes, and applies low-noise Tombi config checks to standalone config files.
 
+Add formatter, linter, schema, and file-selection policy in a local Tombi config. The [Local Tombi config](./guides/local-tombi-config.md) guide covers the supported config file locations and links to Tombi's current option reference.
+
 Use `tombi.configs.lint`, `tombi.configs.check`, `tombi.configs.format`, or `tombi.configs.configuration` only when a repository needs a narrower job split.

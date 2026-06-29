@@ -1,9 +1,18 @@
 import { ESLint, type Linter } from "eslint";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
 import tombiPlugin from "../src/plugin";
 
 const configRules = tombiPlugin.configs.configuration as Linter.Config;
+const configFixturesDirectory = fileURLToPath(
+    new URL("fixtures/config/", import.meta.url)
+);
+const readConfigFixture = (fixtureName: string): string =>
+    readFileSync(new URL(`fixtures/config/${fixtureName}`, import.meta.url), {
+        encoding: "utf8",
+    });
 
 const createConfigRuleEngine = (): ESLint =>
     new ESLint({
@@ -59,23 +68,21 @@ describe("tombi config rules", () => {
 
         const eslint = createConfigRuleEngine();
         const [result] = await eslint.lintText(
-            [
-                "toml-version = 'v1.0.0'",
-                "[files]",
-                'include = ["**/*.toml"]',
-                'exclude = ["dist/**"]',
-                "[format]",
-                "indent-width = 4",
-                "[lint.rules]",
-                'array-values-order = "warn"',
-                "[schema]",
-                'catalog-path = "tombi://json.schemastore.org/catalog.json"',
-                "",
-            ].join("\n"),
-            { filePath: ".tombi.toml" }
+            readConfigFixture("standalone-valid.toml"),
+            { filePath: `${configFixturesDirectory}/.config/tombi.toml` }
         );
 
         expect(result?.messages).toHaveLength(0);
+    });
+
+    it("keeps pyproject.toml out of the standalone config file glob", () => {
+        expect.assertions(1);
+
+        expect(configRules.files).toStrictEqual([
+            "**/.config/tombi.toml",
+            "**/.tombi.toml",
+            "**/tombi.toml",
+        ]);
     });
 
     it("reports missing files include only in the full configuration preset", async () => {

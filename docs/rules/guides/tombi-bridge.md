@@ -23,7 +23,7 @@ That default keeps schema/catalog cache data for 30 days. Use `offline`, `noCach
 
 ## What stays upstream
 
-Keep these in Tombi config:
+Keep these in Tombi config files such as `tombi.toml`, `.tombi.toml`, `.config/tombi.toml`, or `[tool.tombi]` in `pyproject.toml`:
 
 - Formatter style.
 - Lint and schema policy.
@@ -36,3 +36,9 @@ Keep these in ESLint config:
 - The ESLint severity for `tombi/tombi`.
 - Whether this ESLint run is lint-only, check-only, or fix-capable.
 - Bridge timeout, cache, offline, and custom executable settings.
+
+For Tombi-side options, link users to the upstream reference instead of copying the full schema into ESLint config:
+
+- [Configuration search priority](https://tombi-toml.github.io/tombi/docs/configuration#search-priority)
+- [Format rules](https://tombi-toml.github.io/tombi/docs/configuration#format-rules)
+- [Lint rules](https://tombi-toml.github.io/tombi/docs/configuration#lint-rules)

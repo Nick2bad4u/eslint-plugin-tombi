@@ -35,16 +35,16 @@
         "site-docs"
     ],
     "scripts": {
-        "build": "npm run docs:api && docusaurus build",
-        "clear": "docusaurus clear",
-        "deploy": "docusaurus deploy",
-        "docs:api": "typedoc --options typedoc.config.json && node ../../scripts/normalize-typedoc-docusaurus-links.mjs",
-        "docusaurus": "docusaurus",
-        "serve": "docusaurus serve",
-        "start": "docusaurus start --host localhost",
-        "typecheck": "tsc --project tsconfig.json --noEmit && tsc --project tsconfig.typedoc.json --noEmit",
-        "write-heading-ids": "docusaurus write-heading-ids",
-        "write-translations": "docusaurus write-translations"
+        "build": "npm run docs:api && npx docusaurus build",
+        "clear": "npx docusaurus clear",
+        "deploy": "npx docusaurus deploy",
+        "docs:api": "npx typedoc --options typedoc.config.json && node ../../scripts/normalize-typedoc-docusaurus-links.mjs",
+        "docusaurus": "npx docusaurus",
+        "serve": "npx docusaurus serve",
+        "start": "npx docusaurus start --host localhost",
+        "typecheck": "npx tsc --project tsconfig.json --noEmit && npx tsc --project tsconfig.typedoc.json --noEmit",
+        "write-heading-ids": "npx docusaurus write-heading-ids",
+        "write-translations": "npx docusaurus write-translations"
     },
     "dependencies": {
         "@docusaurus/core": "^3.10.1",
@@ -71,7 +71,7 @@
         "typedoc": "^0.28.19",
         "typedoc-docusaurus-theme": "^1.4.2",
         "typedoc-plugin-coverage": "^4.0.3",
-        "typedoc-plugin-dt-links": "^2.0.60",
+        "typedoc-plugin-dt-links": "^2.0.61",
         "typedoc-plugin-external-package-links": "^0.2.0",
         "typedoc-plugin-markdown": "^4.12.0",
         "typedoc-plugin-mdn-links": "^5.1.1",
@@ -84,7 +84,7 @@
         "react": "^19.2.7",
         "react-dom": "^19.2.7"
     },
-    "packageManager": "npm@11.17.0",
+    "packageManager": "npm@11.18.0",
     "engines": {
         "node": ">=22.0.0"
     },

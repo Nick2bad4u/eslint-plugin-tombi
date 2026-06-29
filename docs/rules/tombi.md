@@ -46,6 +46,22 @@ export default [tombi.configs.recommended];
 
 The bridge invokes Tombi with `--stdin-filename`, so Tombi can still discover local configuration for the target file. Keep formatter, lint, schema, override, and extension settings in Tombi config files rather than copying them into ESLint.
 
+For project formatting and linting policy, create `tombi.toml`, `.tombi.toml`, `.config/tombi.toml`, or `[tool.tombi]` in `pyproject.toml`:
+
+```toml
+[format.rules]
+indent-width = 4
+line-width = 100
+string-quote-style = "double"
+
+[lint.rules]
+dotted-keys-out-of-order = "warn"
+key-empty = "error"
+tables-out-of-order = "warn"
+```
+
+Tombi's upstream docs are the source of truth for [configuration lookup](https://tombi-toml.github.io/tombi/docs/configuration#search-priority), [format rules](https://tombi-toml.github.io/tombi/docs/configuration#format-rules), and [lint rules](https://tombi-toml.github.io/tombi/docs/configuration#lint-rules).
+
 ### Options
 
 ```ts
