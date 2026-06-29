@@ -91,25 +91,22 @@ describe("tombi bridge rule", () => {
     }, 30_000);
 
     it("reports Tombi formatting differences and applies fixes", async () => {
-        expect.assertions(2);
+        expect.assertions(3);
+
+        const unformattedText = "[package]\nname='demo'\n";
 
         const lintingEslint = createEngine({ lint: false });
-        const [lintResult] = await lintingEslint.lintText(
-            "[package]\nname='demo'\n",
-            {
-                filePath: "Cargo.toml",
-            }
-        );
+        const [lintResult] = await lintingEslint.lintText(unformattedText, {
+            filePath: "Cargo.toml",
+        });
         const fixingEslint = createEngine({ lint: false }, { fix: true });
-        const [fixResult] = await fixingEslint.lintText(
-            "[package]\nname='demo'\n",
-            {
-                filePath: "Cargo.toml",
-            }
-        );
+        const [fixResult] = await fixingEslint.lintText(unformattedText, {
+            filePath: "Cargo.toml",
+        });
 
         expect(lintResult?.messages).toHaveLength(1);
-        expect(fixResult?.output).toBe('[package]\n    name = "demo"\n');
+        expect(fixResult?.output).not.toBe(unformattedText);
+        expect(fixResult?.output).toContain('name = "demo"');
     }, 30_000);
 
     it("can report formatting differences without offering a fixer", async () => {

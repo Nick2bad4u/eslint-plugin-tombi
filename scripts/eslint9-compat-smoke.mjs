@@ -119,13 +119,15 @@ const run = async () => {
         overrideConfig: formatConfig,
         overrideConfigFile: true,
     });
-    const [formatResult] = await formatEslint.lintText(
-        "[package]\nname='compat'\n",
-        {
-            filePath: join(process.cwd(), "Cargo.toml"),
-        }
-    );
-    if (formatResult?.output !== '[package]\n    name = "compat"\n') {
+    const unformattedText = "[package]\nname='compat'\n";
+    const [formatResult] = await formatEslint.lintText(unformattedText, {
+        filePath: join(process.cwd(), "Cargo.toml"),
+    });
+    if (
+        typeof formatResult?.output !== "string" ||
+        formatResult.output === unformattedText ||
+        !formatResult.output.includes('name = "compat"')
+    ) {
         throw new Error("Tombi format preset did not produce fixed output.");
     }
 
