@@ -170,6 +170,8 @@ const ruleEnabled = (presetName, ruleName) => {
 const getPresetNamesForRule = (ruleName) =>
     presetOrder.filter((presetName) => ruleEnabled(presetName, ruleName));
 
+const getFixLegend = (rule) => (rule.meta.fixable === undefined ? "—" : "🔧");
+
 /** @param {PresetDisplayName} presetName */
 const toPresetMarkdownLink = (presetName) => {
     const preset = presetDocsByName[presetName];
@@ -219,7 +221,7 @@ export const generatePresetsRulesMatrixSectionFromRules = () =>
                 throw new TypeError(`Rule '${name}' is missing meta.docs.url.`);
             }
 
-            return `| [\`${name}\`](${docsUrl}) | ${rule.meta.fixable !== undefined ? "🔧" : "—"} | ${toPresetLinks(
+            return `| [\`${name}\`](${docsUrl}) | ${getFixLegend(rule)} | ${toPresetLinks(
                 getPresetNamesForRule(name)
             )} |`;
         }),
@@ -253,7 +255,7 @@ export const generatePresetDetailMatrixSectionFromRules = (presetName) => {
                 (candidate) => candidate !== presetName
             );
 
-            return `| [\`${name}\`](${docsUrl}) | ${rule.meta.fixable !== undefined ? "🔧" : "—"} | ${toPresetStatus(
+            return `| [\`${name}\`](${docsUrl}) | ${getFixLegend(rule)} | ${toPresetStatus(
                 presetName,
                 name
             )} | ${otherPresetNames.length > 0 ? toPresetLinks(otherPresetNames) : "—"} |`;

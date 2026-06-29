@@ -20,7 +20,7 @@ const actionlintCommandCandidates =
     process.platform === "win32"
         ? [
               path.join(
-                  process.env["ProgramFiles"] ?? "C:\\Program Files",
+                  process.env["ProgramFiles"] ?? String.raw`C:\Program Files`,
                   "WinGet",
                   "Links",
                   "actionlint.exe"
@@ -130,9 +130,11 @@ if (useDefaultFiles && targetFiles.length === 0) {
 }
 
 if (useDefaultFiles) {
+    const excludedFileList = [...excludedFiles].join(", ");
+    const coloredExcludedFileList = pc.magenta(excludedFileList);
     const scopeText = overrideExcluded
-        ? "including" + ` ${pc.magenta([...excludedFiles].join(", "))}`
-        : "excluding" + ` ${pc.magenta([...excludedFiles].join(", "))}`;
+        ? `including ${coloredExcludedFileList}`
+        : `excluding ${coloredExcludedFileList}`;
     console.log(
         `${pc.bold(pc.cyan("Running actionlint on"))} ${pc.magenta(
             String(targetFiles.length)

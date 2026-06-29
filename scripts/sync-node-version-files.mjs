@@ -60,6 +60,24 @@ const normalizeNodeVersion = (version) => {
 const isRecord = (value) => typeof value === "object" && value !== null;
 
 /**
+ * Read the value after a `--version` argument.
+ *
+ * @param {readonly string[]} argumentList
+ * @param {number} index
+ *
+ * @returns {string}
+ */
+const readVersionArgument = (argumentList, index) => {
+    const nextArgument = argumentList[index + 1];
+
+    if (typeof nextArgument !== "string") {
+        throw new TypeError("Expected a version after --version.");
+    }
+
+    return normalizeNodeVersion(nextArgument);
+};
+
+/**
  * Parses command-line arguments for node-version synchronization.
  *
  * @param {readonly string[]} argumentList
@@ -81,13 +99,7 @@ const parseArguments = (argumentList) => {
     let explicitVersion = null;
 
     for (let index = 0; index < argumentList.length; index += 1) {
-        const argument = argumentList[index];
-
-        if (typeof argument !== "string") {
-            throw new TypeError(
-                `Expected a string command-line argument at index ${index}.`
-            );
-        }
+        const argument = argumentList[index] ?? "";
 
         if (argument === "--check") {
             checkOnly = true;
@@ -100,13 +112,7 @@ const parseArguments = (argumentList) => {
         }
 
         if (argument === "--version") {
-            const nextArgument = argumentList[index + 1];
-
-            if (typeof nextArgument !== "string") {
-                throw new TypeError("Expected a version after --version.");
-            }
-
-            explicitVersion = normalizeNodeVersion(nextArgument);
+            explicitVersion = readVersionArgument(argumentList, index);
             index += 1;
             continue;
         }

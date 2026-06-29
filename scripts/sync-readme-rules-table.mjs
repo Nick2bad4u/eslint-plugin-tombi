@@ -53,6 +53,8 @@ const presetOrder = [
     "format",
     "all",
 ];
+const getFixLegend = (ruleModule) =>
+    ruleModule.meta.fixable === undefined ? "—" : "🔧";
 
 const getBounds = (markdown) => {
     const startOffset = markdown.indexOf(rulesSectionHeading);
@@ -95,7 +97,7 @@ const generate = () =>
         "| --- | :-: | :-- |",
         ...Object.entries(builtPlugin.rules).map(
             ([ruleName, ruleModule]) =>
-                `| [\`${ruleName}\`](${ruleModule.meta.docs.url}) | ${ruleModule.meta.fixable !== undefined ? "🔧" : "—"} | ${presetOrder
+                `| [\`${ruleName}\`](${ruleModule.meta.docs.url}) | ${getFixLegend(ruleModule)} | ${presetOrder
                     .filter((presetName) => ruleEnabled(presetName, ruleName))
                     .map(
                         (presetName) =>

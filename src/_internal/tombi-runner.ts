@@ -2,7 +2,7 @@
 /* eslint-disable n/no-process-env -- Tombi is configured through documented environment variables. */
 
 import { spawnSync } from "node:child_process";
-import { mkdirSync } from "node:fs";
+import { existsSync, mkdirSync } from "node:fs";
 import { createRequire } from "node:module";
 import * as path from "node:path";
 import { isDefined } from "ts-extras";
@@ -83,7 +83,17 @@ const platformBinaries: PlatformBinaryMap = {
 
 const isLinuxMusl = (): boolean => {
     if (process.platform !== "linux") return false;
-    const result = spawnSync("ldd", ["--version"], {
+
+    let lddCommand: string | undefined;
+    if (existsSync("/bin/ldd")) {
+        lddCommand = "/bin/ldd";
+    } else if (existsSync("/usr/bin/ldd")) {
+        lddCommand = "/usr/bin/ldd";
+    }
+
+    if (!isDefined(lddCommand)) return false;
+
+    const result = spawnSync(lddCommand, ["--version"], {
         encoding: "utf8",
         shell: false,
     });
@@ -161,7 +171,11 @@ export const createTombiEnvironmentForTesting = (
 
 const verbosityArguments = (
     verbose: TombiBridgeOptions["verbose"]
-): string[] => (verbose === 2 ? ["-vv"] : verbose === 1 ? ["-v"] : []);
+): string[] => {
+    if (verbose === 2) return ["-vv"];
+    if (verbose === 1) return ["-v"];
+    return [];
+};
 
 /**
  * Build Tombi CLI arguments for one subprocess.

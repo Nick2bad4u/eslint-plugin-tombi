@@ -70,19 +70,21 @@ const findEscapeEnd = (value: string, startIndex: number): number => {
  */
 export const stripAnsi = (value: string): string => {
     let output = "";
-    for (let index = 0; index < value.length; index += 1) {
+    let index = 0;
+
+    while (index < value.length) {
         const code = value.codePointAt(index);
         if (code === ESCAPE) {
             const escapeEnd = findEscapeEnd(value, index);
             if (escapeEnd > index) {
-                index = escapeEnd - 1;
+                index = escapeEnd;
                 continue;
             }
         }
         if (code === C1_CSI) {
             const csiEnd = findCsiEnd(value, index + 1);
             if (csiEnd > index) {
-                index = csiEnd - 1;
+                index = csiEnd;
                 continue;
             }
         }
@@ -93,11 +95,12 @@ export const stripAnsi = (value: string): string => {
                 code === C1_OSC
             );
             if (stringControlEnd > index) {
-                index = stringControlEnd - 1;
+                index = stringControlEnd;
                 continue;
             }
         }
         output += value[index] ?? "";
+        index += 1;
     }
     return output;
 };

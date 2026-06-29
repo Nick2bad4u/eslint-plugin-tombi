@@ -67,10 +67,6 @@ const IGNORED_DIRECTORIES = new Set([
     ".stryker-tmp",
 ]);
 
-// Capture Markdown links like [text](url) and images ![alt](url)
-// NOTE: for more accuracy use a Markdown parser (remark) instead of regex.
-const LINK_PATTERN = /!?\[[^\]]*]\(([^)]+)\)/g;
-
 const EXTERNAL_PROTOCOLS = [
     "http:",
     "https:",
@@ -81,8 +77,6 @@ const EXTERNAL_PROTOCOLS = [
     "vscode:",
     "file:",
 ];
-
-const LEADING_BANG = /^!/;
 
 /**
  * Truncate safely, keeping the last `max` code points.
@@ -171,6 +165,43 @@ function normalizeLink(rawLink) {
     const [cleanPath] = pathPart.split("?");
     if (!cleanPath) return "";
     return cleanPath.trim();
+}
+
+/**
+ * Capture Markdown links like [text](url) and image links prefixed with `!`.
+ *
+ * @param {string} content
+ *
+ * @returns {{ fullMatch: string; link: string }[]}
+ */
+function collectMarkdownLinks(content) {
+    const matches = [];
+    let cursor = 0;
+
+    while (cursor < content.length) {
+        const labelStart = content.indexOf("[", cursor);
+        if (labelStart === -1) break;
+
+        const labelEnd = content.indexOf("](", labelStart + 1);
+        if (labelEnd === -1) break;
+
+        const linkStart = labelEnd + 2;
+        const linkEnd = content.indexOf(")", linkStart);
+        if (linkEnd === -1) break;
+
+        const fullMatchStart =
+            labelStart > 0 && content[labelStart - 1] === "!"
+                ? labelStart - 1
+                : labelStart;
+
+        matches.push({
+            fullMatch: content.slice(fullMatchStart, linkEnd + 1),
+            link: content.slice(linkStart, linkEnd),
+        });
+        cursor = linkEnd + 1;
+    }
+
+    return matches;
 }
 
 /**
@@ -307,7 +338,7 @@ async function checkFile(markdownPath, issues, issueSet, metrics) {
     const content = await readFile(markdownPath, "utf8");
     // Skip fenced code blocks
     const contentWithoutCodeBlocks = content.replaceAll(/```[\s\S]*?```/g, "");
-    const matches = Array.from(contentWithoutCodeBlocks.matchAll(LINK_PATTERN));
+    const matches = collectMarkdownLinks(contentWithoutCodeBlocks);
 
     if (matches.length === 0) {
         metrics.filesWithNoLinks++;
@@ -316,9 +347,8 @@ async function checkFile(markdownPath, issues, issueSet, metrics) {
     }
 
     for (const match of matches) {
-        const fullMatch = match[0];
-        const link = match[1];
-        if (LEADING_BANG.test(fullMatch)) {
+        const { fullMatch, link } = match;
+        if (fullMatch.startsWith("!")) {
             metrics.imageLinksIgnored++;
             continue;
         }
