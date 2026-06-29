@@ -41,6 +41,7 @@ export interface TombiConfigs {
     readonly recommended: TombiConfig;
     readonly tombiOnly: TombiConfig;
     readonly toml: TombiConfig;
+    readonly [configName: string]: TombiConfig;
 }
 /**
  * TombiRuleId tombi rule id contract.
