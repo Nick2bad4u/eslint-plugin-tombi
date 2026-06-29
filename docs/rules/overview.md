@@ -10,13 +10,13 @@ The plugin does not reimplement Tombi configuration. Put TOML behavior in `tombi
 
 ## Rule groups
 
-| Group            | Use it for                                                            |
-| ---------------- | --------------------------------------------------------------------- |
-| Bridge linting   | Surface `tombi lint` diagnostics in ESLint output.                    |
-| Format checks    | Report when `tombi format` would change a file.                       |
-| Fixes            | Apply Tombi formatting through `eslint --fix`.                        |
-| Config authoring | Catch common standalone `tombi.toml` setup mistakes.                  |
-| Cache control    | Keep Tombi schema/catalog cache data local with a 30-day default TTL. |
+| Group            | Use it for                                                                                                    |
+| ---------------- | ------------------------------------------------------------------------------------------------------------- |
+| Bridge linting   | Surface `tombi lint` diagnostics in ESLint output.                                                            |
+| Format checks    | Report when `tombi format` would change a file.                                                               |
+| Fixes            | Apply Tombi formatting through `eslint --fix`.                                                                |
+| Config authoring | Catch common standalone `tombi.toml` setup mistakes.                                                          |
+| Cache control    | Keep Tombi schema/catalog cache data local with package-cache defaults, workspace fallback, and a 30-day TTL. |
 
 ## Recommended path
 

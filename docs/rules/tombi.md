@@ -71,22 +71,24 @@ type Options = [
 ];
 ```
 
-| Option               | Default                            | Effect                                                |
-| -------------------- | ---------------------------------- | ----------------------------------------------------- |
-| `lint`               | `true`                             | Run `tombi lint` and report diagnostics.              |
-| `check`              | `true`                             | Report when `tombi format` would change the file.     |
-| `format`             | `true`                             | Provide an ESLint fixer using Tombi formatted output. |
-| `errorOnWarnings`    | `false`                            | Pass `--error-on-warnings` to `tombi lint`.           |
-| `quiet`              | `true`                             | Pass `--quiet` unless set to `false`.                 |
-| `offline`            | `false`                            | Set `TOMBI_OFFLINE=true`.                             |
-| `noCache`            | `false`                            | Set `TOMBI_NO_CACHE=true`.                            |
-| `cache.directory`    | `.cache/eslint-plugin-tombi/tombi` | Set `TOMBI_CACHE_HOME`.                               |
-| `cache.ttlSeconds`   | `2592000`                          | Set `TOMBI_CACHE_TTL`; default is 30 days.            |
-| `cache.noCache`      | `false`                            | Rule-scoped alias for `noCache`.                      |
-| `httpTimeoutSeconds` | `5`                                | Set `TOMBI_HTTP_TIMEOUT`.                             |
-| `timeoutMs`          | `30000`                            | Kill a Tombi subprocess that runs too long.           |
-| `tombiPath`          | bundled native binary              | Use a custom Tombi executable path.                   |
-| `verbose`            | `0`                                | Pass `-v` or `-vv` to Tombi.                          |
+| Option               | Default                                          | Effect                                                |
+| -------------------- | ------------------------------------------------ | ----------------------------------------------------- |
+| `lint`               | `true`                                           | Run `tombi lint` and report diagnostics.              |
+| `check`              | `true`                                           | Report when `tombi format` would change the file.     |
+| `format`             | `true`                                           | Provide an ESLint fixer using Tombi formatted output. |
+| `errorOnWarnings`    | `false`                                          | Pass `--error-on-warnings` to `tombi lint`.           |
+| `quiet`              | `true`                                           | Pass `--quiet` unless set to `false`.                 |
+| `offline`            | `false`                                          | Set `TOMBI_OFFLINE=true`.                             |
+| `noCache`            | `false`                                          | Set `TOMBI_NO_CACHE=true`.                            |
+| `cache.directory`    | `node_modules/.cache/...` with `.cache` fallback | Set `TOMBI_CACHE_HOME`.                               |
+| `cache.ttlSeconds`   | `2592000`                                        | Set `TOMBI_CACHE_TTL`; default is 30 days.            |
+| `cache.noCache`      | `false`                                          | Rule-scoped alias for `noCache`.                      |
+| `httpTimeoutSeconds` | `5`                                              | Set `TOMBI_HTTP_TIMEOUT`.                             |
+| `timeoutMs`          | `30000`                                          | Kill a Tombi subprocess that runs too long.           |
+| `tombiPath`          | bundled native binary                            | Use a custom Tombi executable path.                   |
+| `verbose`            | `0`                                              | Pass `-v` or `-vv` to Tombi.                          |
+
+By default, installed packages use `node_modules/.cache/eslint-plugin-tombi/tombi`. Source checkouts and unwritable package caches fall back to `.cache/eslint-plugin-tombi/tombi` under the ESLint working directory. Explicit `cache.directory` values are resolved from the ESLint working directory unless absolute, and creation failures are reported instead of silently falling back.
 
 ## Additional examples
 

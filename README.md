@@ -57,7 +57,7 @@ export default [
     "error",
     {
      cache: {
-      directory: ".cache/eslint-plugin-tombi/tombi",
+      directory: ".cache/tombi",
       ttlSeconds: 60 * 60 * 24 * 30,
      },
      errorOnWarnings: true,
@@ -73,7 +73,7 @@ export default [
 
 ## Cache behavior
 
-The bridge sets `TOMBI_CACHE_HOME` by default to `.cache/eslint-plugin-tombi/tombi` under the ESLint working directory and sets `TOMBI_CACHE_TTL` to 30 days. This keeps remote JSON schema and TOML schema fetches from being repeated on every ESLint run.
+The bridge sets `TOMBI_CACHE_HOME` by default to `node_modules/.cache/eslint-plugin-tombi/tombi` when the plugin is installed under `node_modules`. Source checkouts and unwritable package caches fall back to `.cache/eslint-plugin-tombi/tombi` under the ESLint working directory. The bridge also sets `TOMBI_CACHE_TTL` to 30 days. This keeps remote JSON schema and TOML schema fetches from being repeated on every ESLint run.
 
 Set `cache.directory`, `cache.ttlSeconds`, `offline`, `noCache`, or `httpTimeoutSeconds` when CI or local development needs different network behavior.
 

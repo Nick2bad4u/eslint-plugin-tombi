@@ -7,12 +7,12 @@ import { stripAnsi } from "./ansi.js";
 /**
  * Parsed Tombi diagnostic that can be reported by ESLint.
  */
-export type TombiDiagnostic = Readonly<{
-    column: number;
-    line: number;
-    message: string;
-    severity: TombiDiagnosticSeverity;
-}>;
+export interface TombiDiagnostic {
+    readonly column: number;
+    readonly line: number;
+    readonly message: string;
+    readonly severity: TombiDiagnosticSeverity;
+}
 
 /**
  * Parsed Tombi diagnostic severity.

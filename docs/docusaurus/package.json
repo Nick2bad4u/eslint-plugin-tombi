@@ -38,7 +38,7 @@
         "build": "npm run docs:api && docusaurus build",
         "clear": "docusaurus clear",
         "deploy": "docusaurus deploy",
-        "docs:api": "typedoc --options typedoc.config.json",
+        "docs:api": "typedoc --options typedoc.config.json && node ../../scripts/normalize-typedoc-docusaurus-links.mjs",
         "docusaurus": "docusaurus",
         "serve": "docusaurus serve",
         "start": "docusaurus start --host localhost",

@@ -55,7 +55,7 @@ describe("tombi bridge rule", () => {
     }, 30_000);
 
     it("lints TOML fixture files from disk", async () => {
-        expect.assertions(3);
+        expect.assertions(4);
 
         const eslint = createEngine(
             { timeoutMs: 30_000 },
@@ -73,6 +73,11 @@ describe("tombi bridge rule", () => {
         expect(messagesByBasename.get("valid.toml")).toHaveLength(0);
         expect(invalidMessages.length).toBeGreaterThan(0);
         expect(invalidMessages[0]?.ruleId).toBe("tombi/tombi");
+        expect(
+            invalidMessages.some((message) =>
+                message.message.includes("An empty key is discouraged")
+            )
+        ).toBe(true);
     }, 30_000);
 
     it("reports Tombi warnings through ESLint", async () => {

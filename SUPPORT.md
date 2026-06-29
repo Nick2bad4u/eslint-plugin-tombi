@@ -1,6 +1,6 @@
 # Support
 
-Thanks for using `eslint-plugin-remark`.
+Thanks for using `eslint-plugin-tombi`.
 
 ## How to get help
 
@@ -8,9 +8,9 @@ Thanks for using `eslint-plugin-remark`.
    - [README.md](./README.md)
    - [docs/](./docs/)
 2. Search existing issues:
-   - <https://github.com/Nick2bad4u/eslint-plugin-remark/issues>
+   - <https://github.com/Nick2bad4u/eslint-plugin-tombi/issues>
 3. Open a new issue if needed:
-   - <https://github.com/Nick2bad4u/eslint-plugin-remark/issues/new>
+   - <https://github.com/Nick2bad4u/eslint-plugin-tombi/issues/new>
 
 ## What to include in an issue
 
@@ -19,7 +19,7 @@ Please include:
 - Node.js version
 - TypeScript version
 - ESLint version
-- `eslint-plugin-remark` version
+- `eslint-plugin-tombi` version
 - Minimal reproduction snippet
 - Expected behavior and actual behavior
 

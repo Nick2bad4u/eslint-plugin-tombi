@@ -17,13 +17,13 @@ const outputPath = resolve(outputDirectory, "index.md");
 const markdown =
     `---
 title: API
-description: Public runtime surface for eslint-plugin-remark.
+description: Public runtime surface for eslint-plugin-tombi.
 ---
 
 # API
 
 ` +
-    "`eslint-plugin-remark` intentionally exposes a small public API.\n\n" +
+    "`eslint-plugin-tombi` intentionally exposes a small public API.\n\n" +
     "## Default export\n\n" +
     "The package default export is the ESLint plugin object. It includes:\n\n" +
     "- `meta.name`\n" +
@@ -32,12 +32,12 @@ description: Public runtime surface for eslint-plugin-remark.
     "- `rules`\n" +
     "- `configs`\n\n" +
     "## Exported type aliases\n\n" +
-    "- `RemarkConfigName`\n" +
-    "- `RemarkConfig`\n" +
-    "- `RemarkConfigs`\n" +
-    "- `RemarkRuleId`\n" +
-    "- `RemarkRuleName`\n" +
-    "- `RemarkPlugin`\n\n" +
+    "- `TombiConfigName`\n" +
+    "- `TombiConfig`\n" +
+    "- `TombiConfigs`\n" +
+    "- `TombiRuleId`\n" +
+    "- `TombiRuleName`\n" +
+    "- `TombiPlugin`\n\n" +
     "## Why this page is hand-authored\n\n" +
     "The public runtime surface of this plugin is small enough that a hand-authored API page is clearer and more stable than a large generated TypeDoc tree for internal helper types.\n";
 

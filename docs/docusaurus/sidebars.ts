@@ -10,7 +10,7 @@ const sidebars = {
         {
             className: "sb-cat-developer",
             collapsed: false,
-            items: ["developer/api/index"],
+            items: ["developer/api/interfaces/TombiPlugin"],
             label: "Developer",
             type: "category",
         },

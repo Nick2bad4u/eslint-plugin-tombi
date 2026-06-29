@@ -2,8 +2,7 @@
     "$schema": "https://typedoc-plugin-markdown.org/schema.json",
     "entryPointStrategy": "expand",
     "entryPoints": [
-        "../../src/plugin.ts",
-        "../../src/_internal"
+        "../../src/plugin.ts"
     ],
     "extends": [
         "typedoc-config-nick2bad4u/typedoc.json"

@@ -31,7 +31,17 @@ export type TombiConfig = Linter.Config | readonly Linter.Config[];
 /**
  * TombiConfigs tombi configs contract.
  */
-export type TombiConfigs = Record<TombiConfigName, TombiConfig>;
+export interface TombiConfigs {
+    readonly all: TombiConfig;
+    readonly check: TombiConfig;
+    readonly configs: TombiConfig;
+    readonly configuration: TombiConfig;
+    readonly format: TombiConfig;
+    readonly lint: TombiConfig;
+    readonly recommended: TombiConfig;
+    readonly tombiOnly: TombiConfig;
+    readonly toml: TombiConfig;
+}
 /**
  * TombiRuleId tombi rule id contract.
  */
@@ -150,5 +160,14 @@ tombiPlugin.configs = {
 /**
  * TombiPlugin tombi plugin contract.
  */
-export type TombiPlugin = typeof tombiPlugin;
+export interface TombiPlugin {
+    readonly configs: TombiConfigs;
+    readonly meta: {
+        readonly name: string;
+        readonly namespace: string;
+        readonly version: string;
+    };
+    readonly processors: NonNullable<ESLint.Plugin["processors"]>;
+    readonly rules: typeof eslintPluginRules;
+}
 export default tombiPlugin;

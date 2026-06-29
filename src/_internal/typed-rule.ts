@@ -37,28 +37,28 @@ export type RuleDefinitionWithDocs<
 /**
  * RuleModuleWithDocs rule module with docs contract.
  */
-export type RuleModuleWithDocs<
+export interface RuleModuleWithDocs<
     MessageIds extends string,
     Options extends Readonly<UnknownArray>,
-> = TSESLint.RuleModule<MessageIds, Options> & {
+> extends TSESLint.RuleModule<MessageIds, Options> {
     meta: TSESLint.RuleMetaData<MessageIds, TombiRuleDocs, Options> & {
         deprecated: boolean;
         docs: TombiRuleDocs;
     };
     name: string;
-};
+}
 
 /**
  * TombiRuleDocs tombi rule docs contract.
  */
-export type TombiRuleDocs = Readonly<{
-    configs: readonly string[] | string;
-    description: string;
-    frozen?: boolean;
-    recommended: boolean;
-    requiresTypeChecking: boolean;
-    url: string;
-}>;
+export interface TombiRuleDocs {
+    readonly configs: readonly string[] | string;
+    readonly description: string;
+    readonly frozen?: boolean;
+    readonly recommended: boolean;
+    readonly requiresTypeChecking: boolean;
+    readonly url: string;
+}
 
 const isReadonlyRecord = (value: unknown): value is Readonly<UnknownRecord> =>
     typeof value === "object" && value !== null && !Array.isArray(value);
@@ -139,6 +139,8 @@ export const createTypedRule = <
 /**
  * ToRuleListener to rule listener contract.
  */
-export const toRuleListener = (
+export function toRuleListener(
     listener: GenericRuleListener
-): TSESLint.RuleListener => listener;
+): TSESLint.RuleListener {
+    return listener;
+}

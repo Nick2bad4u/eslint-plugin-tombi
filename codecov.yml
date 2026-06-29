@@ -6,7 +6,7 @@ codecov:
     notify:
         wait_for_ci: true
     require_ci_to_pass: true
-    slug: "Nick2bad4u/eslint-plugin-remark"
+    slug: "Nick2bad4u/eslint-plugin-tombi"
 
 comment:
     behavior: "default"

@@ -15,7 +15,7 @@ The `lint`, `check`, and `format` options let presets or users narrow that work.
 
 The bridge sets:
 
-- `TOMBI_CACHE_HOME` to `.cache/eslint-plugin-tombi/tombi`.
+- `TOMBI_CACHE_HOME` to `node_modules/.cache/eslint-plugin-tombi/tombi` when installed under `node_modules`, with `.cache/eslint-plugin-tombi/tombi` under the ESLint working directory as the source-checkout or unwritable-package-cache fallback.
 - `TOMBI_CACHE_TTL` to `2592000` seconds.
 - `TOMBI_HTTP_TIMEOUT` to `5` seconds.
 

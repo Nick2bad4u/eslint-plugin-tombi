@@ -1,8 +1,12 @@
+import { mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import * as path from "node:path";
 import { describe, expect, it } from "vitest";
 
 import {
     buildTombiArgumentsForTesting,
     createTombiEnvironmentForTesting,
+    resolveTombiCacheDirectoryForTesting,
     runTombiSynchronously,
 } from "../src/_internal/tombi-runner";
 
@@ -21,6 +25,101 @@ describe("tombi runner environment", () => {
         ).toContain(".cache/eslint-plugin-tombi/tombi");
         expect(environment["TOMBI_CACHE_TTL"]).toBe(String(60 ** 2 * 24 * 30));
         expect(environment).not.toHaveProperty("TOMBI_NO_CACHE");
+    });
+
+    it("uses node_modules cache by default when installed under node_modules", () => {
+        expect.assertions(1);
+
+        const workspaceDirectory = path.join(
+            tmpdir(),
+            "tombi-node-modules-cache-test"
+        );
+        const packageModuleDirectory = path.join(
+            workspaceDirectory,
+            "node_modules",
+            "eslint-plugin-tombi",
+            "dist"
+        );
+
+        rmSync(workspaceDirectory, { force: true, recursive: true });
+        mkdirSync(packageModuleDirectory, { recursive: true });
+        try {
+            const cacheDirectory = resolveTombiCacheDirectoryForTesting({
+                cwd: workspaceDirectory,
+                packageModuleDirectory,
+            });
+
+            expect(cacheDirectory.replaceAll("\\", "/")).toContain(
+                "node_modules/.cache/eslint-plugin-tombi/tombi"
+            );
+        } finally {
+            rmSync(workspaceDirectory, { force: true, recursive: true });
+        }
+    });
+
+    it("falls back to workspace cache when the node_modules cache is unavailable", () => {
+        expect.assertions(2);
+
+        const workspaceDirectory = path.join(
+            tmpdir(),
+            "tombi-cache-fallback-test"
+        );
+        const nodeModulesDirectory = path.join(
+            workspaceDirectory,
+            "node_modules"
+        );
+        const packageModuleDirectory = path.join(
+            nodeModulesDirectory,
+            "eslint-plugin-tombi",
+            "dist"
+        );
+
+        rmSync(workspaceDirectory, { force: true, recursive: true });
+        mkdirSync(packageModuleDirectory, { recursive: true });
+        writeFileSync(path.join(nodeModulesDirectory, ".cache"), "blocked");
+        try {
+            const cacheDirectory = resolveTombiCacheDirectoryForTesting({
+                cwd: workspaceDirectory,
+                packageModuleDirectory,
+            });
+
+            expect(cacheDirectory.replaceAll("\\", "/")).toContain(
+                ".cache/eslint-plugin-tombi/tombi"
+            );
+            expect(cacheDirectory.replaceAll("\\", "/")).not.toContain(
+                "node_modules/.cache"
+            );
+        } finally {
+            rmSync(workspaceDirectory, { force: true, recursive: true });
+        }
+    });
+
+    it("throws when an explicit cache directory cannot be created", () => {
+        expect.assertions(1);
+
+        const workspaceDirectory = path.join(
+            tmpdir(),
+            "tombi-explicit-cache-test"
+        );
+
+        rmSync(workspaceDirectory, { force: true, recursive: true });
+        mkdirSync(workspaceDirectory, { recursive: true });
+        writeFileSync(
+            path.join(workspaceDirectory, "blocked-cache"),
+            "blocked"
+        );
+        try {
+            expect(() =>
+                resolveTombiCacheDirectoryForTesting({
+                    cache: {
+                        directory: "blocked-cache/tombi",
+                    },
+                    cwd: workspaceDirectory,
+                })
+            ).toThrow("blocked-cache");
+        } finally {
+            rmSync(workspaceDirectory, { force: true, recursive: true });
+        }
     });
 
     it("forwards cache, offline, no-cache, and HTTP timeout options", () => {

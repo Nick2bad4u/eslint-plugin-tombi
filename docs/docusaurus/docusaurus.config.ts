@@ -253,8 +253,8 @@ const config = {
                     onInlineTags: "ignore",
                     path: "site-docs",
                     routeBasePath: "docs",
-                    showLastUpdateAuthor: true,
-                    showLastUpdateTime: true,
+                    showLastUpdateAuthor: false,
+                    showLastUpdateTime: false,
                     sidebarCollapsed: true,
                     sidebarCollapsible: true,
                     sidebarPath: "./sidebars.ts",
@@ -280,7 +280,6 @@ const config = {
                 sitemap: {
                     filename: "sitemap.xml",
                     ignorePatterns: ["/tests/**"],
-                    lastmod: "datetime",
                 },
                 svgr: {
                     svgrConfig: {
@@ -475,12 +474,12 @@ const config = {
                     items: [
                         {
                             label: "\u{F121} API Reference",
-                            to: "/docs/developer/api",
+                            to: "/docs/developer/api/interfaces/TombiPlugin",
                         },
                     ],
                     label: "\u{F121} Dev",
                     position: "right",
-                    to: "/docs/developer/api",
+                    to: "/docs/developer/api/interfaces/TombiPlugin",
                     type: "dropdown",
                 },
             ],

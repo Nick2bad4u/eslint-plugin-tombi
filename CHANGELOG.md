@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- Initialized `eslint-plugin-remark` from the maintained ESLint plugin template.
-- Added a `remark/remark` bridge rule that runs Remark against Markdown files from ESLint.
-- Added initial Remark config authoring rules for plugin arrays, duplicate plugin references, relative plugin paths, package dependency checks, plugin ordering, and config file naming.
-- Added Docusaurus rule docs, preset docs, README rule table sync, and preset matrix sync for the new plugin identity.
+- Initialized `eslint-plugin-tombi` from the maintained ESLint plugin template.
+- Added the `tombi/tombi` bridge rule that runs Tombi against TOML files from ESLint.
+- Added Tombi config authoring rules for config filenames, unknown properties, file include/exclude arrays, lint rule levels, and built-in schema catalog usage.
+- Added Docusaurus rule docs, preset docs, README rule table sync, preset matrix sync, Codecov reporting, and release workflows for the new plugin identity.

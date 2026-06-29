@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Run actionlint for workflow files, excluding Build.yml by default to avoid
- * hangs. Pass --include-build to lint all workflows (including Build.yml).
+ * Run actionlint for workflow files.
  *
  * Defaults:
  *
@@ -37,7 +36,8 @@ const actionlintCommand =
 const workflowsDir = path.join(repoRoot, ".github", "workflows");
 const rawArgs = process.argv.slice(2);
 const overrideExcluded = rawArgs.includes("--include-excluded");
-const excludedFiles = new Set(["FILL_EXCLUDED_FILES_HERE.yml"]);
+/** @type {ReadonlySet<string>} */
+const excludedFiles = new Set();
 /** @type {Set<string>} */
 const flagsWithValues = new Set([
     "-config-file",
@@ -137,7 +137,10 @@ if (useDefaultFiles) {
         : `excluding ${coloredExcludedFileList}`;
     const actionlintLabel = pc.bold(pc.cyan("Running actionlint on"));
     const workflowCount = pc.magenta(String(targetFiles.length));
-    const workflowScope = pc.cyan("workflow file(s), " + scopeText + ".");
+    const workflowScope =
+        excludedFiles.size === 0
+            ? pc.cyan("workflow file(s).")
+            : pc.cyan("workflow file(s), " + scopeText + ".");
     console.log(`${actionlintLabel} ${workflowCount} ${workflowScope}`);
 }
 

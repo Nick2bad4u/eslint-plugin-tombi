@@ -7,7 +7,8 @@
 
 - [ ] `npm run typecheck`
 - [ ] `npm run test`
-- [ ] `npm run lint:all:fix:quiet` (or explain why not run)
+- [ ] `npm run lint:all`
+- [ ] `npm run release:verify` (or explain why not run)
 - [ ] If docs touched: `npm run docs:typecheck`
 - [ ] If rules changed: updated/added rule tests (valid/invalid/edge/fixer)
 - [ ] If rule behavior changed: updated `docs/rules/<rule-id>.md`

@@ -5,6 +5,7 @@ import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync } from "node:fs";
 import { createRequire } from "node:module";
 import * as path from "node:path";
+import { fileURLToPath } from "node:url";
 import { isDefined } from "ts-extras";
 
 import {
@@ -15,7 +16,14 @@ import {
 const DEFAULT_TIMEOUT_IN_MILLISECONDS = 30_000 as const;
 const DEFAULT_CACHE_TTL_SECONDS = 60 ** 2 * 24 * 30;
 const DEFAULT_HTTP_TIMEOUT_SECONDS = 5;
+const PACKAGE_CACHE_DIRECTORY = path.join(
+    ".cache",
+    "eslint-plugin-tombi",
+    "tombi"
+);
 const packageRequire = createRequire(import.meta.url);
+// eslint-disable-next-line unicorn/prefer-import-meta-properties -- import.meta.dirname is not available across the declared Node.js engine range.
+const moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
 const resultCache = new Map<string, TombiBridgeResult>();
 
 /**
@@ -122,26 +130,102 @@ const resolveTombiBinary = (explicitPath: string | undefined): string => {
     }
 };
 
+const findNodeModulesDirectory = (startDirectory: string): null | string => {
+    let currentDirectory = path.resolve(startDirectory);
+    while (true) {
+        if (path.basename(currentDirectory) === "node_modules") {
+            return currentDirectory;
+        }
+
+        const parentDirectory = path.dirname(currentDirectory);
+        if (parentDirectory === currentDirectory) {
+            return null;
+        }
+        currentDirectory = parentDirectory;
+    }
+};
+
+const resolveWorkspaceCacheDirectory = (cwd: string): string =>
+    path.resolve(cwd, PACKAGE_CACHE_DIRECTORY);
+
+const resolveDefaultCacheDirectory = (
+    cwd: string,
+    packageModuleDirectory: string
+): string => {
+    const nodeModulesDirectory = findNodeModulesDirectory(
+        packageModuleDirectory
+    );
+    if (nodeModulesDirectory === null) {
+        return resolveWorkspaceCacheDirectory(cwd);
+    }
+    return path.join(nodeModulesDirectory, PACKAGE_CACHE_DIRECTORY);
+};
+
 const resolveCacheDirectory = (
     cacheDirectory: string | undefined,
+    cwd: string,
+    packageModuleDirectory: string
+): string => {
+    if (isDefined(cacheDirectory) && cacheDirectory !== "") {
+        return path.isAbsolute(cacheDirectory)
+            ? cacheDirectory
+            : path.resolve(cwd, cacheDirectory);
+    }
+    return resolveDefaultCacheDirectory(cwd, packageModuleDirectory);
+};
+
+const resolveWritableCacheDirectory = (
+    cacheDirectory: string,
+    configuredCacheDirectory: string | undefined,
     cwd: string
 ): string => {
-    const directory =
-        isDefined(cacheDirectory) && cacheDirectory !== ""
-            ? cacheDirectory
-            : path.join(".cache", "eslint-plugin-tombi", "tombi");
-    return path.isAbsolute(directory)
-        ? directory
-        : path.resolve(cwd, directory);
+    try {
+        // eslint-disable-next-line security/detect-non-literal-fs-filename -- The cache directory is deterministic by default and user-configurable by design.
+        mkdirSync(cacheDirectory, { recursive: true });
+        return cacheDirectory;
+    } catch (error: unknown) {
+        const fallbackCacheDirectory = resolveWorkspaceCacheDirectory(cwd);
+        const hasExplicitCacheDirectory =
+            isDefined(configuredCacheDirectory) &&
+            configuredCacheDirectory !== "";
+
+        if (
+            hasExplicitCacheDirectory ||
+            cacheDirectory === fallbackCacheDirectory
+        ) {
+            throw error;
+        }
+
+        // eslint-disable-next-line security/detect-non-literal-fs-filename -- Falls back to the deterministic workspace cache when the package cache cannot be created.
+        mkdirSync(fallbackCacheDirectory, { recursive: true });
+        return fallbackCacheDirectory;
+    }
+};
+
+/**
+ * Resolve and create the Tombi cache directory used for one bridge invocation.
+ *
+ * @internal
+ */
+export const resolveTombiCacheDirectoryForTesting = (
+    options: Pick<TombiBridgeOptions, "cache" | "cwd"> &
+        Readonly<{ packageModuleDirectory?: string }>
+): string => {
+    const configuredCacheDirectory = options.cache?.directory;
+    const cacheDirectory = resolveCacheDirectory(
+        configuredCacheDirectory,
+        options.cwd,
+        options.packageModuleDirectory ?? moduleDirectory
+    );
+    return resolveWritableCacheDirectory(
+        cacheDirectory,
+        configuredCacheDirectory,
+        options.cwd
+    );
 };
 
 const createEnvironment = (options: TombiBridgeOptions): NodeJS.ProcessEnv => {
-    const cacheDirectory = resolveCacheDirectory(
-        options.cache?.directory,
-        options.cwd
-    );
-    // eslint-disable-next-line security/detect-non-literal-fs-filename -- The cache directory is resolved under cwd by default and user-configurable by design.
-    mkdirSync(cacheDirectory, { recursive: true });
+    const cacheDirectory = resolveTombiCacheDirectoryForTesting(options);
     return {
         ...process.env,
         JS_RUNTIME_NAME: process.release.name,
@@ -228,9 +312,9 @@ const runTombiCommand = (
 /**
  * Run Tombi lint and format against one ESLint source text synchronously.
  */
-export const runTombiSynchronously = (
+export function runTombiSynchronously(
     options: TombiBridgeOptions
-): TombiBridgeResult => {
+): TombiBridgeResult {
     const cacheKey = JSON.stringify(options);
     const cachedResult = resultCache.get(cacheKey);
     if (isDefined(cachedResult)) return cachedResult;
@@ -257,7 +341,7 @@ export const runTombiSynchronously = (
     };
     resultCache.set(cacheKey, result);
     return result;
-};
+}
 
 /* eslint-enable n/no-sync -- Re-enable after synchronous ESLint bridge helpers. */
 /* eslint-enable n/no-process-env -- Re-enable after Tombi environment helpers. */

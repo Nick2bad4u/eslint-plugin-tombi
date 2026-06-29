@@ -1,1 +1,22 @@
-"" = "fixture warning"
+title = "Tombi warning fixture"
+""    = "empty keys are discouraged"
+
+[package]
+    name     = "eslint-plugin-tombi-fixture"
+    version  = "1.0.0"
+    keywords = [ "eslint", "tombi", "toml" ]
+
+[tool.tombi]
+    include = [ "**/*.toml", "Cargo.lock" ]
+    exclude = [ "target/**", "node_modules/**" ]
+
+    [tool.tombi.lint.rules]
+        key-empty = "warn"
+
+[[workspace.members]]
+    name = "core"
+    path = "packages/core"
+
+[[workspace.members]]
+    name = "docs"
+    path = "docs/docusaurus"

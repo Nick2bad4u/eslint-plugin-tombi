@@ -1,9 +1,9 @@
-# Contributing to eslint-plugin-remark
+# Contributing to eslint-plugin-tombi
 
 Thanks for your interest in contributing.
 
-This repository contains an ESLint plugin focused on integrating Remark into
-ESLint and enforcing Remark configuration best practices.
+This repository contains an ESLint plugin focused on integrating Tombi into
+ESLint and enforcing Tombi configuration best practices.
 
 ## Prerequisites
 
@@ -24,9 +24,7 @@ ESLint and enforcing Remark configuration best practices.
 3. Run the main quality gate:
 
    ```bash
-   npm run lint:all:fix:quiet
-   npm run typecheck
-   npm test
+   npm run release:verify
    ```
 
 ## Recommended development workflow
@@ -71,49 +69,28 @@ When adding script output, prefer this severity split:
 
 Use these commands locally before submitting a pull request:
 
+- `npm run release:verify`
+- `npm run lint:all`
 - `npm run typecheck`
 - `npm test`
-- `npm run lint:all:fix:quiet`
 
-## Snapshot testing guidance
+## Testing Guidance
 
-This repository uses Vitest snapshots selectively for stable contract surfaces,
-not as a replacement for explicit rule behavior assertions.
+This repository uses Vitest tests for the bridge runner, diagnostic parsing,
+config presets, config-authoring rules, and plugin entrypoints.
 
-Use snapshots for:
+Use focused test commands while iterating:
 
-- normalized plugin contract summaries
-- normalized rule metadata matrices
-- generated documentation artifacts (for example README rules sections)
-- docs structure schemas where heading order and presence are contractual
-
-Avoid snapshots for:
-
-- raw AST trees
-- broad ESLint diagnostics payloads in rule tests
-- unnormalized objects with volatile or environment-specific fields
-
-Focused update flow:
-
-```bash
-npx vitest run test/plugin-contract-snapshots.test.ts -u
-npx vitest run test/rule-metadata-snapshots.test.ts -u
-npm run sync:readme-rules-table:update
-npx vitest run test/docs-heading-snapshots.test.ts -u
-```
-
-Verification flow:
-
-```bash
-npx vitest run test/plugin-contract-snapshots.test.ts test/rule-metadata-snapshots.test.ts test/readme-rules-table-sync.test.ts test/docs-heading-snapshots.test.ts
-```
+- `npx vitest run test/bridge.test.ts`
+- `npx vitest run test/config-rules.test.ts`
+- `npx vitest run test/tombi-runner.test.ts`
 
 For examples of explicit fixture and rule-doc sync policy, refer to
 [`docs/rules/getting-started.md`](./docs/rules/getting-started.md) and
 [`docs/rules/presets/index.md`](./docs/rules/presets/index.md).
 Optional focused checks:
 
-- `npm run mutation:test` for Stryker mutation testing
+- `npm run test:coverage` for coverage reporting
 - `npm run changelog:preview` to preview unreleased changelog output
 
 ## Commit guidance
@@ -127,9 +104,9 @@ Format:
 
 Examples:
 
-- `:sparkles: feat(rule): add prefer-remark-plugins-array`
+- `:sparkles: feat(rule): add prefer-tombi-files-include-array`
 - `:bug: fix(rule): avoid false positive in union type handling`
-- `:memo: docs: clarify remark bridge configuration`
+- `:memo: docs: clarify tombi bridge configuration`
 
 ## Pull request expectations
 

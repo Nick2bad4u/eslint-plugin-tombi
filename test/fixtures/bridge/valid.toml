@@ -1,1 +1,31 @@
-name = "demo"
+title          = "Tombi fixture"
+enabled        = true
+schema-version = 1
+
+[package]
+    name     = "eslint-plugin-tombi-fixture"
+    version  = "1.0.0"
+    keywords = [ "eslint", "tombi", "toml" ]
+
+    [package.metadata]
+        license    = "MIT"
+        repository = "https://github.com/Nick2bad4u/eslint-plugin-tombi"
+
+[tool.tombi]
+    include = [ "**/*.toml", "Cargo.lock" ]
+    exclude = [ "target/**", "node_modules/**" ]
+
+    [tool.tombi.lint.rules]
+        key-empty = "warn"
+
+[[workspace.members]]
+    name = "core"
+    path = "packages/core"
+
+[[workspace.members]]
+    name = "docs"
+    path = "docs/docusaurus"
+
+[workspace.metadata.ci]
+    os   = [ "ubuntu-latest", "windows-latest", "macos-latest" ]
+    node = [ "22", "24" ]

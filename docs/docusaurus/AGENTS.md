@@ -18,7 +18,7 @@ applyTo: "docs/docusaurus/**"
   - When you need a hand-authored explainer for generated API content, create it in a tracked docs location such as `docs/docusaurus/site-docs/developer/**`, then link to the generated API page with a normal Markdown link.
   - If a Docusaurus build fails because a `developer/api/...` sidebar id no longer exists, regenerate the API docs with `npm run docs:api`, inspect the current generated ids, and update `docs/docusaurus/sidebars.ts`. Do not create placeholder docs under the generated API folder to satisfy stale sidebar entries.
 - ESLint Config Inspector integration:
-  - The ESLint configuration inspector is built from the repository root via `npm run build:eslint-inspector`, which writes to `docs/docusaurus/static/eslint-inspector` with base path `/eslint-plugin-sdl-2/eslint-inspector/`.
+  - The ESLint configuration inspector is built from the repository root via `npm run build:eslint-inspector`, which writes to `docs/docusaurus/static/eslint-inspector` with base path `/eslint-plugin-tombi/eslint-inspector/`.
   - For local inspection, use `npm run build:eslint-inspector:local`.
   - Do not modify the generated files in `static/eslint-inspector` by hand
 - Configuration alignment:
