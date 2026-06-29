@@ -135,11 +135,10 @@ if (useDefaultFiles) {
     const scopeText = overrideExcluded
         ? `including ${coloredExcludedFileList}`
         : `excluding ${coloredExcludedFileList}`;
-    console.log(
-        `${pc.bold(pc.cyan("Running actionlint on"))} ${pc.magenta(
-            String(targetFiles.length)
-        )} ${pc.cyan(`workflow file(s), ${scopeText}.`)}`
-    );
+    const actionlintLabel = pc.bold(pc.cyan("Running actionlint on"));
+    const workflowCount = pc.magenta(String(targetFiles.length));
+    const workflowScope = pc.cyan("workflow file(s), " + scopeText + ".");
+    console.log(`${actionlintLabel} ${workflowCount} ${workflowScope}`);
 }
 
 const result = spawnSync(actionlintCommand, [...userArgs, ...targetFiles], {

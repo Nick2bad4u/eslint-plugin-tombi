@@ -65,6 +65,30 @@ const findEscapeEnd = (value: string, startIndex: number): number => {
     return startIndex + 2;
 };
 
+const findAnsiSequenceEnd = (
+    value: string,
+    index: number
+): number | undefined => {
+    const code = value.codePointAt(index);
+    if (code === ESCAPE) {
+        const escapeEnd = findEscapeEnd(value, index);
+        return escapeEnd > index ? escapeEnd : undefined;
+    }
+    if (code === C1_CSI) {
+        const csiEnd = findCsiEnd(value, index + 1);
+        return csiEnd > index ? csiEnd : undefined;
+    }
+    if (arrayIncludes(C1_STRING_CONTROLS, code)) {
+        const stringControlEnd = findStringControlEnd(
+            value,
+            index + 1,
+            code === C1_OSC
+        );
+        return stringControlEnd > index ? stringControlEnd : undefined;
+    }
+    return undefined;
+};
+
 /**
  * Remove ANSI SGR, cursor, OSC, and related terminal escape sequences.
  */
@@ -73,31 +97,10 @@ export const stripAnsi = (value: string): string => {
     let index = 0;
 
     while (index < value.length) {
-        const code = value.codePointAt(index);
-        if (code === ESCAPE) {
-            const escapeEnd = findEscapeEnd(value, index);
-            if (escapeEnd > index) {
-                index = escapeEnd;
-                continue;
-            }
-        }
-        if (code === C1_CSI) {
-            const csiEnd = findCsiEnd(value, index + 1);
-            if (csiEnd > index) {
-                index = csiEnd;
-                continue;
-            }
-        }
-        if (arrayIncludes(C1_STRING_CONTROLS, code)) {
-            const stringControlEnd = findStringControlEnd(
-                value,
-                index + 1,
-                code === C1_OSC
-            );
-            if (stringControlEnd > index) {
-                index = stringControlEnd;
-                continue;
-            }
+        const sequenceEnd = findAnsiSequenceEnd(value, index);
+        if (isDefined(sequenceEnd)) {
+            index = sequenceEnd;
+            continue;
         }
         output += value[index] ?? "";
         index += 1;
