@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+    buildTombiArgumentsForTesting,
     createTombiEnvironmentForTesting,
     runTombiSynchronously,
 } from "../src/_internal/tombi-runner";
@@ -43,6 +44,55 @@ describe("tombi runner environment", () => {
         expect(environment["TOMBI_HTTP_TIMEOUT"]).toBe("17");
         expect(environment["TOMBI_NO_CACHE"]).toBe("true");
         expect(environment["TOMBI_OFFLINE"]).toBe("true");
+    });
+
+    it("passes bridge execution options as Tombi CLI flags", () => {
+        expect.assertions(1);
+
+        expect(
+            buildTombiArgumentsForTesting("lint", {
+                cache: {
+                    noCache: true,
+                },
+                code: 'name = "demo"\n',
+                codeFilename: "sample.toml",
+                cwd: process.cwd(),
+                errorOnWarnings: true,
+                offline: true,
+                verbose: 2,
+            })
+        ).toStrictEqual([
+            "lint",
+            "--stdin-filename",
+            "sample.toml",
+            "--quiet",
+            "--offline",
+            "--no-cache",
+            "-vv",
+            "--error-on-warnings",
+            "-",
+        ]);
+    });
+
+    it("omits quiet and no-cache flags when the user disables them", () => {
+        expect.assertions(1);
+
+        expect(
+            buildTombiArgumentsForTesting("format", {
+                code: 'name = "demo"\n',
+                codeFilename: "sample.toml",
+                cwd: process.cwd(),
+                noCache: false,
+                quiet: false,
+                verbose: 1,
+            })
+        ).toStrictEqual([
+            "format",
+            "--stdin-filename",
+            "sample.toml",
+            "-v",
+            "-",
+        ]);
     });
 
     it("returns source text when both Tombi subprocesses are disabled", () => {

@@ -163,22 +163,36 @@ const verbosityArguments = (
     verbose: TombiBridgeOptions["verbose"]
 ): string[] => (verbose === 2 ? ["-vv"] : verbose === 1 ? ["-v"] : []);
 
+/**
+ * Build Tombi CLI arguments for one subprocess.
+ *
+ * @internal
+ */
+export const buildTombiArgumentsForTesting = (
+    command: "format" | "lint",
+    options: TombiBridgeOptions
+): readonly string[] => [
+    command,
+    "--stdin-filename",
+    options.codeFilename,
+    ...(options.quiet === false ? [] : ["--quiet"]),
+    ...(options.offline === true ? ["--offline"] : []),
+    ...(options.cache?.noCache === true || options.noCache === true
+        ? ["--no-cache"]
+        : []),
+    ...verbosityArguments(options.verbose),
+    ...(command === "lint" && options.errorOnWarnings === true
+        ? ["--error-on-warnings"]
+        : []),
+    "-",
+];
+
 const runTombiCommand = (
     command: "format" | "lint",
     options: TombiBridgeOptions
 ): { status: null | number; stderr: string; stdout: string } => {
     const binaryPath = resolveTombiBinary(options.tombiPath);
-    const args = [
-        command,
-        "--stdin-filename",
-        options.codeFilename,
-        ...(options.quiet === false ? [] : ["--quiet"]),
-        ...verbosityArguments(options.verbose),
-        ...(command === "lint" && options.errorOnWarnings === true
-            ? ["--error-on-warnings"]
-            : []),
-        "-",
-    ];
+    const args = buildTombiArgumentsForTesting(command, options);
     const result = spawnSync(binaryPath, args, {
         cwd: options.cwd,
         encoding: "utf8",
