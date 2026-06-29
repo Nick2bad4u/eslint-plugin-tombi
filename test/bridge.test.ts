@@ -58,7 +58,7 @@ describe("tombi bridge rule", () => {
         expect.assertions(4);
 
         const eslint = createEngine(
-            { timeoutMs: 30_000 },
+            { check: false, format: false, timeoutMs: 30_000 },
             { cwd: fixturesDirectory }
         );
         const results = await eslint.lintFiles(["invalid.toml", "valid.toml"]);
