@@ -44,6 +44,7 @@ const allowedTopLevelProperties = [
     "files",
     "format",
     "lint",
+    "lsp",
     "schema",
     "schemas",
     "server",
