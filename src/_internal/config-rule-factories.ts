@@ -41,6 +41,7 @@ const allowedLintRuleLevels = [
 const allowedLintRuleLevelSet = new Set<string>(allowedLintRuleLevels);
 const allowedTopLevelProperties = [
     "default",
+    "extensions",
     "files",
     "format",
     "lint",

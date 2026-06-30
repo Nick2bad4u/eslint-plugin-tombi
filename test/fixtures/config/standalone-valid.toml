@@ -18,6 +18,9 @@ toml-version = "v1.0.0"
     formatting = { enabled = true }
     hover      = { enabled = true }
 
+[extensions]
+    "tombi-toml/tombi" = { enabled = true }
+
 [schema]
     enabled = true
     strict  = false
