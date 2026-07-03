@@ -11,7 +11,7 @@ if (Array.isArray(tomlPreset))
 const localConfigurationPreset = /** @type {import("eslint").Linter.Config} */ (
     tomlPreset
 );
-const allowStripAnsiBanDependenciesRule =
+const stripAnsiBanDependenciesRuleOverride =
     /** @type {import("eslint").Linter.RuleEntry} */ ([
         "error",
         { allowed: ["strip-ansi"] },
@@ -32,7 +32,7 @@ const sharedConfig = createConfig({
         ...configEntry,
         rules: {
             ...configEntry.rules,
-            "depend/ban-dependencies": allowStripAnsiBanDependenciesRule,
+            "depend/ban-dependencies": stripAnsiBanDependenciesRuleOverride,
         },
     };
 });

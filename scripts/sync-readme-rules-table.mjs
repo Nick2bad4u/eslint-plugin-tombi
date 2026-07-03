@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import { format } from "prettier";
 
 import builtPlugin from "../dist/plugin.js";
+import { normalizeMarkdownTableSpacing } from "./_internal/markdown-tables.mjs";
 
 const rulesSectionHeading = "## Rules";
 const presetDocsByName = {
@@ -69,7 +70,6 @@ const getBounds = (markdown) => {
         endOffset: nextOffset < 0 ? markdown.length : nextOffset,
     };
 };
-const normalize = (value) => value.replaceAll(/\s+/gu, " ").trim();
 const ruleEnabled = (presetName, ruleName) => {
     const preset = builtPlugin.configs[presetName];
     const entries = Array.isArray(preset) ? preset : [preset];
@@ -93,6 +93,8 @@ const generate = () =>
                 `- [\`${presetDocsByName[name].icon}\`](${presetDocsByName[name].href}) — [\`${presetDocsByName[name].publicName}\`](${presetDocsByName[name].href})`
         ),
         "",
+        "<!-- prettier-ignore-start -->",
+        "",
         "| Rule | Fix | Preset key |",
         "| --- | :-: | :-- |",
         ...Object.entries(builtPlugin.rules).map(
@@ -106,6 +108,8 @@ const generate = () =>
                     .join(" ")} |`
         ),
         "",
+        "<!-- prettier-ignore-end -->",
+        "",
     ].join("\n");
 export const syncReadmeRulesTable = async ({ writeChanges = false } = {}) => {
     const file = resolve("README.md");
@@ -116,7 +120,11 @@ export const syncReadmeRulesTable = async ({ writeChanges = false } = {}) => {
         .trimEnd();
     const { startOffset, endOffset } = getBounds(markdown);
     const current = markdown.slice(startOffset, endOffset).trimEnd();
-    if (normalize(current) === normalize(expected)) return { changed: false };
+    if (
+        normalizeMarkdownTableSpacing(current) ===
+        normalizeMarkdownTableSpacing(expected)
+    )
+        return { changed: false };
     if (!writeChanges)
         throw new Error(
             "README rules table is out of sync with plugin metadata."

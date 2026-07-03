@@ -6,7 +6,7 @@ import {
 /**
  * Rule disallowing empty Tombi file exclude pattern lists.
  */
-const disallowTombiEmptyFilesExcludeRule: TombiConfigRuleModule =
+const emptyFilesExcludeRule: TombiConfigRuleModule =
     createNoEmptyFilesPatternRule({
         configs: ["tombi.configs.configuration", "tombi.configs.all"],
         description: "disallow empty Tombi [files].exclude pattern lists.",
@@ -15,4 +15,4 @@ const disallowTombiEmptyFilesExcludeRule: TombiConfigRuleModule =
         recommended: true,
     });
 
-export default disallowTombiEmptyFilesExcludeRule;
+export default emptyFilesExcludeRule;

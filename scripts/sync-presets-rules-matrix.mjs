@@ -212,6 +212,8 @@ export const generatePresetsRulesMatrixSectionFromRules = () =>
         "",
         ...presetOrder.map(toPresetLegendLine),
         "",
+        "<!-- prettier-ignore-start -->",
+        "",
         "| Rule | Fix | Preset key |",
         "| --- | :-: | :-- |",
         ...sortedRules.map(([name, rule]) => {
@@ -225,6 +227,8 @@ export const generatePresetsRulesMatrixSectionFromRules = () =>
                 getPresetNamesForRule(name)
             )} |`;
         }),
+        "",
+        "<!-- prettier-ignore-end -->",
         "",
     ].join("\n");
 
@@ -241,6 +245,8 @@ export const generatePresetDetailMatrixSectionFromRules = (presetName) => {
         "",
         "- `🔧` = autofixable",
         "- `—` = report only",
+        "",
+        "<!-- prettier-ignore-start -->",
         "",
         "| Rule | Fix | This preset | Also enabled in |",
         "| --- | :-: | :-- | :-- |",
@@ -260,6 +266,8 @@ export const generatePresetDetailMatrixSectionFromRules = (presetName) => {
                 name
             )} | ${otherPresetNames.length > 0 ? toPresetLinks(otherPresetNames) : "—"} |`;
         }),
+        "",
+        "<!-- prettier-ignore-end -->",
         "",
         generatedMatrixEndMarker,
     ].join("\n");

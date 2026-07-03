@@ -6,7 +6,7 @@ import {
 /**
  * Rule requiring supported Tombi lint rule levels.
  */
-const requireTombiValidLintRuleLevelsRule: TombiConfigRuleModule =
+const validLintRuleLevelsRule: TombiConfigRuleModule =
     createValidLintRuleLevelsRule({
         configs: ["tombi.configs.configuration", "tombi.configs.all"],
         description:
@@ -15,4 +15,4 @@ const requireTombiValidLintRuleLevelsRule: TombiConfigRuleModule =
         recommended: true,
     });
 
-export default requireTombiValidLintRuleLevelsRule;
+export default validLintRuleLevelsRule;

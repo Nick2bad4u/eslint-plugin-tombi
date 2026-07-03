@@ -6,7 +6,7 @@ import {
 /**
  * Rule disallowing unsupported top-level Tombi config properties.
  */
-const disallowTombiUnknownConfigPropertiesRule: TombiConfigRuleModule =
+const unknownConfigPropertiesRule: TombiConfigRuleModule =
     createUnknownPropertiesRule({
         configs: [
             "tombi.configs.configuration",
@@ -18,4 +18,4 @@ const disallowTombiUnknownConfigPropertiesRule: TombiConfigRuleModule =
         recommended: true,
     });
 
-export default disallowTombiUnknownConfigPropertiesRule;
+export default unknownConfigPropertiesRule;

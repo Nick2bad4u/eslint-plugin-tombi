@@ -6,7 +6,7 @@ import {
 /**
  * Rule requiring standalone Tombi config files to use Tombi-discovered names.
  */
-const requireTombiConfigFileNamingConventionRule: TombiConfigRuleModule =
+const configFileNamingConventionRule: TombiConfigRuleModule =
     createFilenameRule({
         configs: ["tombi.configs.configuration", "tombi.configs.all"],
         description:
@@ -15,4 +15,4 @@ const requireTombiConfigFileNamingConventionRule: TombiConfigRuleModule =
         recommended: true,
     });
 
-export default requireTombiConfigFileNamingConventionRule;
+export default configFileNamingConventionRule;

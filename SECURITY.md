@@ -22,10 +22,14 @@ Include as much detail as possible:
 Only the latest published release is considered actively supported for security
 fixes.
 
+<!-- prettier-ignore-start -->
+
 | Version | Supported |
 | ------- | --------- |
-| Latest  | ✅        |
-| Older   | ❌        |
+| Latest  | ✅         |
+| Older   | ❌         |
+
+<!-- prettier-ignore-end -->
 
 ## Response Expectations
 
