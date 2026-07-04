@@ -27,7 +27,7 @@ const createConfigRuleEngine = (): ESLint =>
 
 describe("tombi config rules", () => {
     it("reports config-authoring problems through the configuration preset", async () => {
-        expect.assertions(7);
+        expect.assertions(8);
 
         const eslint = createConfigRuleEngine();
         const [result] = await eslint.lintText(
@@ -56,6 +56,7 @@ describe("tombi config rules", () => {
         );
         expect(ruleIds).toContain("tombi/disallow-tombi-empty-files-include");
         expect(ruleIds).toContain("tombi/disallow-tombi-empty-files-exclude");
+        expect(ruleIds).not.toContain("tombi/prefer-tombi-files-include-array");
         expect(ruleIds).toContain("tombi/require-tombi-valid-lint-rule-levels");
         expect(ruleIds).toContain("tombi/prefer-tombi-builtin-schema-catalog");
         expect(
@@ -75,6 +76,28 @@ describe("tombi config rules", () => {
         expect(result?.messages).toHaveLength(0);
     });
 
+    it("accepts Tombi overrides and omitted files include defaults", async () => {
+        expect.assertions(1);
+
+        const eslint = createConfigRuleEngine();
+        const [result] = await eslint.lintText(
+            [
+                "[format]",
+                "line-width = 100",
+                "",
+                "[[overrides]]",
+                'files.include = ["tests/**/*.toml"]',
+                "",
+                "[overrides.lint.rules]",
+                'key-empty = "off"',
+                "",
+            ].join("\n"),
+            { filePath: "tombi.toml" }
+        );
+
+        expect(result?.messages).toHaveLength(0);
+    });
+
     it("keeps pyproject.toml out of the standalone config file glob", () => {
         expect.assertions(1);
 
@@ -85,19 +108,26 @@ describe("tombi config rules", () => {
         ]);
     });
 
-    it("reports missing files include only in the full configuration preset", async () => {
-        expect.assertions(1);
+    it("reports malformed configured files include patterns", async () => {
+        expect.assertions(2);
 
         const eslint = createConfigRuleEngine();
-        const [result] = await eslint.lintText("[format]\nindent-width = 4\n", {
-            filePath: "tombi.toml",
-        });
+        const [result] = await eslint.lintText(
+            '[files]\ninclude = "**/*.toml"\n',
+            {
+                filePath: "tombi.toml",
+            }
+        );
 
         expect(
             result?.messages.some(
                 (message) =>
-                    message.ruleId === "tombi/prefer-tombi-files-include-array"
+                    message.ruleId ===
+                    "tombi/disallow-tombi-empty-files-include"
             )
         ).toBe(true);
+        expect(result?.messages[0]?.message).toContain(
+            "Expected [files].include to be an array of TOML file patterns."
+        );
     });
 });

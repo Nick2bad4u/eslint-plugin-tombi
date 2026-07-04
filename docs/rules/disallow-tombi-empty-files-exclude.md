@@ -1,6 +1,6 @@
 # disallow-tombi-empty-files-exclude
 
-Disallow empty `files.exclude` pattern lists in standalone Tombi config files.
+Disallow invalid `files.exclude` pattern lists in standalone Tombi config files.
 
 > **Rule catalog ID:** R006
 
@@ -10,11 +10,11 @@ This rule targets standalone Tombi config files visited by ESLint, normally thro
 
 ## What this rule reports
 
-The rule reports `[files].exclude = []` and empty string patterns inside the `[files]` section.
+The rule reports `files.exclude` values that are present but malformed: non-array values, empty arrays, and empty string patterns inside the `[files]` section. It does not require `files.exclude` to be configured.
 
 ## Why this rule exists
 
-An empty exclude list is usually config noise. Removing it keeps the active Tombi policy easier to scan.
+An invalid exclude list is usually config noise. Removing it keeps the active Tombi policy easier to scan.
 
 ## ❌ Incorrect
 
@@ -23,7 +23,16 @@ An empty exclude list is usually config noise. Removing it keeps the active Tomb
 exclude = []
 ```
 
+```toml
+[files]
+exclude = "dist/**"
+```
+
 ## ✅ Correct
+
+```toml
+[format]
+```
 
 ```toml
 [files]

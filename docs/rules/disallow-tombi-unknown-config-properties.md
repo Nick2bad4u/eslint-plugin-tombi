@@ -26,6 +26,12 @@ Misspelled root keys silently make a config harder to reason about. This rule ca
 
 ```toml
 [format]
+
+[[overrides]]
+files.include = ["tests/**/*.toml"]
+
+[overrides.lint.rules]
+key-empty = "off"
 ```
 
 ## Further reading

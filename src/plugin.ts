@@ -118,7 +118,6 @@ const configurationRules = {
     "tombi/disallow-tombi-empty-files-include": "warn",
     "tombi/disallow-tombi-unknown-config-properties": "warn",
     "tombi/prefer-tombi-builtin-schema-catalog": "warn",
-    "tombi/prefer-tombi-files-include-array": "warn",
     "tombi/require-tombi-config-file-naming-convention": "warn",
     "tombi/require-tombi-valid-lint-rule-levels": "warn",
 } as const satisfies FlatConfigRules;

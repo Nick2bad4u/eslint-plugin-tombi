@@ -46,6 +46,7 @@ const allowedTopLevelProperties = [
     "format",
     "lint",
     "lsp",
+    "overrides",
     "schema",
     "schemas",
     "server",
@@ -137,17 +138,6 @@ const getSectionText = (
     return sectionLines.length > 0 ? arrayJoin(sectionLines, "\n") : undefined;
 };
 
-const hasFilesConfig = (sourceText: string): boolean => {
-    for (const line of getLines(sourceText)) {
-        if (getTableName(line) === "files") return true;
-        const property = getProperty(line);
-        if (property?.key === "files" && property.value.startsWith("{")) {
-            return true;
-        }
-    }
-    return false;
-};
-
 const hasArrayProperty = (
     sourceText: string,
     propertyName: "exclude" | "include"
@@ -156,6 +146,14 @@ const hasArrayProperty = (
         const property = getProperty(line);
         return property?.key === propertyName && property.value.startsWith("[");
     });
+
+const hasProperty = (
+    sourceText: string,
+    propertyName: "exclude" | "include"
+): boolean =>
+    getLines(sourceText).some(
+        (line) => getProperty(line)?.key === propertyName
+    );
 
 const hasEmptyArrayProperty = (
     sourceText: string,
@@ -277,30 +275,6 @@ export const createUnknownPropertiesRule = (
     });
 
 /**
- * CreateRequireFilesIncludeArrayRule create require files include array rule
- * contract.
- */
-export const createRequireFilesIncludeArrayRule = (
-    definition: Except<ConfigRuleDefinition, "check">
-): TombiConfigRuleModule =>
-    createConfigTextRule({
-        ...definition,
-        check: (sourceText) => {
-            if (!hasFilesConfig(sourceText)) {
-                return "Expected this config to define a [files] table with include patterns.";
-            }
-            const filesSection = getSectionText(sourceText, "files");
-            if (
-                isDefined(filesSection) &&
-                hasArrayProperty(filesSection, "include")
-            ) {
-                return undefined;
-            }
-            return "Expected [files].include to be an array of TOML file patterns.";
-        },
-    });
-
-/**
  * CreateNoEmptyFilesPatternRule create no empty files pattern rule contract.
  */
 export const createNoEmptyFilesPatternRule = (
@@ -312,6 +286,12 @@ export const createNoEmptyFilesPatternRule = (
         check: (sourceText) => {
             const filesSection = getSectionText(sourceText, "files");
             if (!isDefined(filesSection)) return undefined;
+            if (
+                hasProperty(filesSection, definition.propertyName) &&
+                !hasArrayProperty(filesSection, definition.propertyName)
+            ) {
+                return `Expected [files].${definition.propertyName} to be an array of TOML file patterns.`;
+            }
             if (hasEmptyArrayProperty(filesSection, definition.propertyName)) {
                 return `Expected [files].${definition.propertyName} to include at least one pattern.`;
             }
