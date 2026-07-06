@@ -112,7 +112,7 @@
         "@typescript-eslint/parser": "^8.62.1",
         "@typescript-eslint/utils": "^8.62.1",
         "strip-ansi": "^7.2.0",
-        "tombi": "^1.1.7",
+        "tombi": "^1.2.0",
         "toml-eslint-parser": "^1.0.3",
         "ts-extras": "^1.2.0",
         "type-fest": "^5.7.0"
