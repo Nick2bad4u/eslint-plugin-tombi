@@ -11,7 +11,10 @@ import {
     toRuleListener,
 } from "../_internal/typed-rule.js";
 
-type MessageIds = "tombiExecutionError" | "tombiFormat" | "tombiProblem";
+type MessageIds =
+    | "tombiExecutionError"
+    | "tombiFormat"
+    | "tombiProblem";
 type Options = [TombiRuleOption?];
 type ReportLocation = Readonly<{
     end: { column: number; line: number };
@@ -30,7 +33,10 @@ type TombiRuleOption = Readonly<{
     quiet?: boolean;
     timeoutMs?: number;
     tombiPath?: string;
-    verbose?: 0 | 1 | 2;
+    verbose?:
+        | 0
+        | 1
+        | 2;
 }>;
 
 const toEslintLoc = (

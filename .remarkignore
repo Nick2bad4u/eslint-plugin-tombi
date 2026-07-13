@@ -9,3 +9,5 @@ docs/docusaurus/static/eslint-inspector/
 CHANGELOG.md
 AGENTS.md
 **/AGENTS.md
+.github/ISSUE_TEMPLATE/
+.github/PULL_REQUEST_TEMPLATE/

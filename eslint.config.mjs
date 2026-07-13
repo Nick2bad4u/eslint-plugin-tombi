@@ -24,7 +24,7 @@ const sharedConfig = createConfig({
         "prettier.config.mjs",
         "stylelint.config.mjs",
     ],
-    plugins: { tombi: false },
+    plugins: { "stylelint-2": false, tombi: false },
 }).map((configEntry) => {
     if (configEntry.rules?.["depend/ban-dependencies"] === undefined)
         return configEntry;
@@ -42,6 +42,7 @@ const config = [
     ...sharedConfig,
     {
         ignores: [
+            "**/*.css",
             ".github/workflows/**",
             "dist/**",
             "coverage/**",

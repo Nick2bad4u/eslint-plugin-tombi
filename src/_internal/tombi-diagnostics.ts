@@ -17,7 +17,10 @@ export interface TombiDiagnostic {
 /**
  * Parsed Tombi diagnostic severity.
  */
-export type TombiDiagnosticSeverity = "error" | "info" | "warning";
+export type TombiDiagnosticSeverity =
+    | "error"
+    | "info"
+    | "warning";
 
 const severityLabels = [
     "Error:",

@@ -52,7 +52,10 @@ export type TombiBridgeOptions = Readonly<{
     runLint?: boolean;
     timeoutMs?: number;
     tombiPath?: string;
-    verbose?: 0 | 1 | 2;
+    verbose?:
+        | 0
+        | 1
+        | 2;
 }>;
 
 /**

@@ -1,5 +1,8 @@
 export type PresetDisplayName =
-    "all" | "configuration" | "recommended" | "tombiOnly";
+    | "all"
+    | "configuration"
+    | "recommended"
+    | "tombiOnly";
 export function extractPresetDetailMatrixSection(
     presetName: PresetDisplayName,
     markdown: string
