@@ -38,7 +38,7 @@
         "build": "npm run docs:api && npx docusaurus build",
         "clear": "npx docusaurus clear",
         "deploy": "npx docusaurus deploy",
-        "docs:api": "typedoc --options typedoc.config.json",
+        "docs:api": "npx typedoc --options typedoc.config.json",
         "docusaurus": "npx docusaurus",
         "serve": "npx docusaurus serve",
         "start": "npx docusaurus start --host localhost",
