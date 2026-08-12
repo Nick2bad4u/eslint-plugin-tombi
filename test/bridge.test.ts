@@ -165,49 +165,58 @@ describe("tombi bridge rule", () => {
     }, 30_000);
 
     it("lets native Tombi discover local tombi.toml configuration", async () => {
-        expect.assertions(1);
+        expect.assertions(2);
 
-        await usingTemporaryDirectory(
-            "tombi-bridge-config-",
-            async (temporaryDirectory) => {
-                writeFileSync(
-                    path.join(temporaryDirectory, "tombi.toml"),
-                    readConfigFixture("standalone-valid.toml")
-                );
-                const eslint = createEngine(
-                    { lint: false },
-                    { cwd: temporaryDirectory, fix: true }
-                );
-                const [result] = await eslint.lintText(
-                    '[package]\nname = "demo"\n',
-                    { filePath: path.join(temporaryDirectory, "Cargo.toml") }
-                );
+        await expect(
+            usingTemporaryDirectory(
+                "tombi-bridge-config-",
+                async (temporaryDirectory) => {
+                    writeFileSync(
+                        path.join(temporaryDirectory, "tombi.toml"),
+                        readConfigFixture("standalone-valid.toml")
+                    );
+                    const eslint = createEngine(
+                        { lint: false },
+                        { cwd: temporaryDirectory, fix: true }
+                    );
+                    const [result] = await eslint.lintText(
+                        '[package]\nname = "demo"\n',
+                        {
+                            filePath: path.join(
+                                temporaryDirectory,
+                                "Cargo.toml"
+                            ),
+                        }
+                    );
 
-                expect(result?.output).toBe("[package]\nname = 'demo'\n");
-            }
-        );
+                    expect(result?.output).toBe("[package]\nname = 'demo'\n");
+                }
+            )
+        ).resolves.toBeUndefined();
     }, 30_000);
 
     it("lets native Tombi discover pyproject tool.tombi configuration", async () => {
-        expect.assertions(1);
+        expect.assertions(2);
 
-        await usingTemporaryDirectory(
-            "tombi-bridge-pyproject-",
-            async (temporaryDirectory) => {
-                writeFileSync(
-                    path.join(temporaryDirectory, "pyproject.toml"),
-                    readConfigFixture("pyproject.toml")
-                );
-                const eslint = createEngine(
-                    { lint: false },
-                    { cwd: temporaryDirectory, fix: true }
-                );
-                const [result] = await eslint.lintText('name = "demo"\n', {
-                    filePath: path.join(temporaryDirectory, "sample.toml"),
-                });
+        await expect(
+            usingTemporaryDirectory(
+                "tombi-bridge-pyproject-",
+                async (temporaryDirectory) => {
+                    writeFileSync(
+                        path.join(temporaryDirectory, "pyproject.toml"),
+                        readConfigFixture("pyproject.toml")
+                    );
+                    const eslint = createEngine(
+                        { lint: false },
+                        { cwd: temporaryDirectory, fix: true }
+                    );
+                    const [result] = await eslint.lintText('name = "demo"\n', {
+                        filePath: path.join(temporaryDirectory, "sample.toml"),
+                    });
 
-                expect(result?.output).toBe("name = 'demo'\n");
-            }
-        );
+                    expect(result?.output).toBe("name = 'demo'\n");
+                }
+            )
+        ).resolves.toBeUndefined();
     }, 30_000);
 });

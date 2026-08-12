@@ -44,6 +44,7 @@ export interface RuleModuleWithDocs<
     meta: TSESLint.RuleMetaData<MessageIds, TombiRuleDocs, Options> & {
         deprecated: boolean;
         docs: TombiRuleDocs;
+        languages: readonly string[];
     };
     name: string;
 }

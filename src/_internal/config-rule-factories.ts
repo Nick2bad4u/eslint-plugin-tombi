@@ -78,7 +78,7 @@ const getTableName = (line: string): string | undefined => {
 
 const getTopLevelTableName = (line: string): string | undefined => {
     const tableName = getTableName(line);
-    if (!isDefined(tableName) || tableName === "") return undefined;
+    if (tableName === "" || !isDefined(tableName)) return undefined;
     return arrayFirst(stringSplit(tableName, "."));
 };
 
@@ -108,12 +108,11 @@ const collectRootProperties = (sourceText: string): string[] => {
         if (isDefined(tableName)) {
             isInsideTable = true;
             properties.add(tableName);
-            continue;
         }
-        if (isInsideTable) continue;
-
-        const property = getProperty(line);
-        if (isDefined(property)) properties.add(property.key);
+        if (!isInsideTable) {
+            const property = getProperty(line);
+            if (isDefined(property)) properties.add(property.key);
+        }
     }
     return [...properties];
 };
@@ -130,9 +129,10 @@ const getSectionText = (
         if (isDefined(tableName)) {
             if (isInsideTarget) break;
             isInsideTarget = tableName === sectionName;
-            continue;
         }
-        if (isInsideTarget) sectionLines.push(line);
+        if (isInsideTarget && !isDefined(tableName)) {
+            sectionLines.push(line);
+        }
     }
 
     return sectionLines.length > 0 ? arrayJoin(sectionLines, "\n") : undefined;
@@ -203,25 +203,25 @@ export function createConfigTextRule(
     definition: ConfigRuleDefinition
 ): TombiConfigRuleModule {
     return createTypedRule<MessageIds, Options>({
-        create: (context) =>
-            toRuleListener({
-                Program() {
-                    const message = definition.check(
-                        context.sourceCode.text,
-                        context.physicalFilename
-                    );
-                    if (typeof message !== "string") return;
-                    context.report({
-                        data: { message },
-                        loc: {
-                            end: { column: 0, line: 1 },
-                            start: { column: 0, line: 1 },
-                        },
-                        messageId: "configProblem",
-                        node: context.sourceCode.ast,
-                    });
-                },
-            }),
+        create: (context) => {
+            const program = (): void => {
+                const message = definition.check(
+                    context.sourceCode.text,
+                    context.physicalFilename
+                );
+                if (typeof message !== "string") return;
+                context.report({
+                    data: { message },
+                    loc: {
+                        end: { column: 0, line: 1 },
+                        start: { column: 0, line: 1 },
+                    },
+                    messageId: "configProblem",
+                    node: context.sourceCode.ast,
+                });
+            };
+            return toRuleListener({ Program: program });
+        },
         meta: {
             defaultOptions: [],
             deprecated: false,
@@ -232,6 +232,7 @@ export function createConfigTextRule(
                 requiresTypeChecking: false,
                 url: createRuleDocsUrl(definition.name),
             },
+            languages: ["js/js"],
             messages: { configProblem: "Tombi config: {{message}}" },
             schema: [],
             type: "problem",
@@ -318,11 +319,13 @@ export const createValidLintRuleLevelsRule = (
                 const level = isDefined(property)
                     ? getQuotedValue(property.value)
                     : undefined;
-                if (!isDefined(level)) continue;
-                if (setHas(allowedLintRuleLevelSet, level)) continue;
-
-                const unexpectedLevel: string = level;
-                return `Unexpected Tombi lint rule level '${unexpectedLevel}'. Expected error, warn, or off.`;
+                if (
+                    isDefined(level) &&
+                    !setHas(allowedLintRuleLevelSet, level)
+                ) {
+                    const unexpectedLevel: string = level;
+                    return `Unexpected Tombi lint rule level '${unexpectedLevel}'. Expected error, warn, or off.`;
+                }
             }
             return undefined;
         },
