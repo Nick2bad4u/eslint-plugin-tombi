@@ -109,8 +109,43 @@ jobs:
               with:
                   node-version-file: ".node-version"
                   registry-url: "${{ env.NPM_REGISTRY_URL }}"
-                  cache: "npm"
-                  cache-dependency-path: "package-lock.json"
+                  package-manager-cache: false
+
+            - name: "Setup declared npm version"
+              id: "npm"
+              working-directory: "${{ runner.temp }}"
+              env:
+                  PROJECT_PACKAGE_JSON: "${{ github.workspace }}/package.json"
+              run: |
+                  set -euo pipefail
+
+                  package_manager="$(
+                    node -e "
+                      const fs = require('node:fs');
+                      const packageJson = JSON.parse(
+                        fs.readFileSync(process.env.PROJECT_PACKAGE_JSON, 'utf8'),
+                      );
+                      process.stdout.write(packageJson.packageManager ?? '');
+                    "
+                  )"
+
+                  if [[ "${package_manager}" =~ ^npm@([0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
+                    npm install --global --ignore-scripts --no-audit --no-fund \
+                      "npm@${BASH_REMATCH[1]}"
+                  else
+                    echo "::error title=Invalid npm packageManager::Expected an exact npm version, received ${package_manager}."
+                    exit 1
+                  fi
+
+                  npm --version
+                  echo "cache_dir=$(npm config get cache)" >> "${GITHUB_OUTPUT}"
+
+            - name: "Restore npm cache"
+              uses: "actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9" # v6.1.0
+              with:
+                  path: "${{ steps.npm.outputs.cache_dir }}"
+                  key: "npm-${{ runner.os }}-${{ hashFiles('.node-version', 'package-lock.json') }}"
+                  restore-keys: "npm-${{ runner.os }}-"
 
             - name: "Install dependencies"
               run: "npm ci"
