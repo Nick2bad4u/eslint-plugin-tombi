@@ -232,7 +232,7 @@ export function createConfigTextRule(
                 requiresTypeChecking: false,
                 url: createRuleDocsUrl(definition.name),
             },
-            languages: ["js/js"],
+            languages: ["js/js", "toml/toml"],
             messages: { configProblem: "Tombi config: {{message}}" },
             schema: [],
             type: "problem",

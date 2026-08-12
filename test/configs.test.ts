@@ -55,6 +55,18 @@ describe("tombi plugin configs", () => {
         expect(config.rules).toStrictEqual({ "tombi/tombi": "error" });
     });
 
+    it("declares TOML language compatibility for every rule", () => {
+        expect.assertions(1);
+
+        expect(
+            new Set(
+                Object.values(tombiPlugin.rules).flatMap(
+                    (rule) => rule.meta.languages
+                )
+            )
+        ).toStrictEqual(new Set(["js/js", "toml/toml"]));
+    });
+
     it("exposes mode presets for lint-only, check, and format runs", () => {
         expect.assertions(3);
 

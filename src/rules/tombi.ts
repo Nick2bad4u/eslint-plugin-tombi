@@ -194,7 +194,7 @@ const tombiRule: RuleModuleWithDocs<MessageIds, Options> = createTypedRule<
             url: "https://nick2bad4u.github.io/eslint-plugin-tombi/docs/rules/tombi",
         },
         fixable: "whitespace",
-        languages: ["js/js"],
+        languages: ["js/js", "toml/toml"],
         messages: {
             tombiExecutionError: "Tombi execution error: {{message}}",
             tombiFormat: "Tombi formatting differs from this file.",

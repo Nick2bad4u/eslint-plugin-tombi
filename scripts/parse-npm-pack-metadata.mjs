@@ -84,18 +84,17 @@ if (isMainModule) {
     const [
         ,
         ,
-        metadataPath,
         expectedPackageName,
     ] = process.argv;
 
-    if (metadataPath === undefined || expectedPackageName === undefined) {
+    if (expectedPackageName === undefined) {
         console.error(
-            "Usage: node scripts/parse-npm-pack-metadata.mjs <metadata-path> <package-name>"
+            "Usage: node scripts/parse-npm-pack-metadata.mjs <package-name> < npm-pack.json"
         );
         process.exitCode = 1;
     } else {
         try {
-            const text = readFileSync(metadataPath, "utf8");
+            const text = readFileSync(0, "utf8");
             process.stdout.write(
                 parseNpmPackFilename(text, expectedPackageName)
             );

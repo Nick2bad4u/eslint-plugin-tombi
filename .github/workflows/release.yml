@@ -363,7 +363,7 @@ jobs:
 
                   npm pack --json --pack-destination "$assets_dir" > "$pack_metadata_path"
 
-                  tarball_filename=$(node scripts/parse-npm-pack-metadata.mjs "$pack_metadata_path" "$PACKAGE_NAME")
+                  tarball_filename=$(node scripts/parse-npm-pack-metadata.mjs "$PACKAGE_NAME" < "$pack_metadata_path")
                   tarball_path="${assets_dir}/${tarball_filename}"
                   safe_package_name=$(printf '%s' "$PACKAGE_NAME" | sed 's/^@//; s#/#-#g')
                   zip_basename="${safe_package_name}-${VERSION}"
