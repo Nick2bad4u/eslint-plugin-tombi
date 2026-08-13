@@ -95,12 +95,11 @@ const platformBinaries: PlatformBinaryMap = {
 const isLinuxMusl = (): boolean => {
     if (process.platform !== "linux") return false;
 
-    let lddCommand: string | undefined;
-    if (existsSync("/bin/ldd")) {
-        lddCommand = "/bin/ldd";
-    } else if (existsSync("/usr/bin/ldd")) {
-        lddCommand = "/usr/bin/ldd";
-    }
+    const lddCommand = existsSync("/bin/ldd")
+        ? "/bin/ldd"
+        : existsSync("/usr/bin/ldd")
+          ? "/usr/bin/ldd"
+          : undefined;
 
     if (!isDefined(lddCommand)) return false;
 
@@ -112,7 +111,7 @@ const isLinuxMusl = (): boolean => {
 };
 
 const resolveTombiBinary = (explicitPath: string | undefined): string => {
-    if (isDefined(explicitPath) && explicitPath !== "") return explicitPath;
+    if (explicitPath !== "" && isDefined(explicitPath)) return explicitPath;
     const platformKey =
         process.platform === "linux" && isLinuxMusl()
             ? "linux-musl"
@@ -169,7 +168,7 @@ const resolveCacheDirectory = (
     cwd: string,
     packageModuleDirectory: string
 ): string => {
-    if (isDefined(cacheDirectory) && cacheDirectory !== "") {
+    if (cacheDirectory !== "" && isDefined(cacheDirectory)) {
         return path.isAbsolute(cacheDirectory)
             ? cacheDirectory
             : path.resolve(cwd, cacheDirectory);
@@ -227,7 +226,9 @@ export const resolveTombiCacheDirectoryForTesting = (
     );
 };
 
-const createEnvironment = (options: TombiBridgeOptions): NodeJS.ProcessEnv => {
+const createEnvironment = (
+    options: TombiBridgeOptions
+): Record<string, string | undefined> => {
     const cacheDirectory = resolveTombiCacheDirectoryForTesting(options);
     return {
         ...process.env,
@@ -254,7 +255,7 @@ const createEnvironment = (options: TombiBridgeOptions): NodeJS.ProcessEnv => {
  */
 export const createTombiEnvironmentForTesting = (
     options: TombiBridgeOptions
-): NodeJS.ProcessEnv => createEnvironment(options);
+): Record<string, string | undefined> => createEnvironment(options);
 
 const verbosityArguments = (
     verbose: TombiBridgeOptions["verbose"]

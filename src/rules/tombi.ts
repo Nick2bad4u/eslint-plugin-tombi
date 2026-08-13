@@ -104,84 +104,80 @@ const tombiRule: RuleModuleWithDocs<MessageIds, Options> = createTypedRule<
     MessageIds,
     Options
 >({
-    create: (context, [rawOptions = {}]) =>
-        toRuleListener({
-            Program() {
-                const shouldLint = rawOptions.lint ?? true;
-                const shouldCheckFormat = rawOptions.check ?? true;
-                const shouldOfferFormatFix = rawOptions.format ?? true;
-                if (
-                    !shouldLint &&
-                    !shouldCheckFormat &&
-                    !shouldOfferFormatFix
-                ) {
-                    return;
-                }
+    create: (context, [rawOptions = {}]) => {
+        const program = (): void => {
+            const shouldLint = rawOptions.lint ?? true;
+            const shouldCheckFormat = rawOptions.check ?? true;
+            const shouldOfferFormatFix = rawOptions.format ?? true;
+            if (!shouldLint && !shouldCheckFormat && !shouldOfferFormatFix) {
+                return;
+            }
 
-                const bridgeOptions = toBridgeOptions(
-                    rawOptions,
-                    context,
-                    shouldLint,
-                    shouldCheckFormat || shouldOfferFormatFix
-                );
-                let bridgeResult: ReturnType<typeof runTombiSynchronously>;
-                try {
-                    bridgeResult = runTombiSynchronously(bridgeOptions);
-                } catch (error: unknown) {
+            const bridgeOptions = toBridgeOptions(
+                rawOptions,
+                context,
+                shouldLint,
+                shouldCheckFormat || shouldOfferFormatFix
+            );
+            let bridgeResult: ReturnType<typeof runTombiSynchronously>;
+            try {
+                bridgeResult = runTombiSynchronously(bridgeOptions);
+            } catch (error: unknown) {
+                context.report({
+                    data: {
+                        // eslint-disable-next-line canonical/no-use-extend-native -- unicorn/prefer-error-is-error requires the native Error.isError guard.
+                        message: Error.isError(error)
+                            ? error.message
+                            : String(error),
+                    },
+                    loc: {
+                        end: { column: 0, line: 1 },
+                        start: { column: 0, line: 1 },
+                    },
+                    messageId: "tombiExecutionError",
+                    node: context.sourceCode.ast,
+                });
+                return;
+            }
+
+            if (
+                (shouldCheckFormat || shouldOfferFormatFix) &&
+                bridgeResult.formattedText !== context.sourceCode.text
+            ) {
+                context.report({
+                    loc: {
+                        end: { column: 0, line: 1 },
+                        start: { column: 0, line: 1 },
+                    },
+                    messageId: "tombiFormat",
+                    node: context.sourceCode.ast,
+                    ...(shouldOfferFormatFix &&
+                        bridgeResult.formattedText !== "" && {
+                            fix: (fixer) =>
+                                fixer.replaceTextRange(
+                                    [0, context.sourceCode.text.length],
+                                    bridgeResult.formattedText
+                                ),
+                        }),
+                });
+            }
+
+            if (shouldLint) {
+                for (const diagnostic of bridgeResult.diagnostics) {
                     context.report({
                         data: {
-                            // eslint-disable-next-line canonical/no-use-extend-native -- unicorn/prefer-error-is-error requires the native Error.isError guard.
-                            message: Error.isError(error)
-                                ? error.message
-                                : String(error),
+                            severity: diagnostic.severity,
+                            text: diagnostic.message,
                         },
-                        loc: {
-                            end: { column: 0, line: 1 },
-                            start: { column: 0, line: 1 },
-                        },
-                        messageId: "tombiExecutionError",
+                        loc: toEslintLoc(diagnostic),
+                        messageId: "tombiProblem",
                         node: context.sourceCode.ast,
                     });
-                    return;
                 }
-
-                if (
-                    (shouldCheckFormat || shouldOfferFormatFix) &&
-                    bridgeResult.formattedText !== context.sourceCode.text
-                ) {
-                    context.report({
-                        loc: {
-                            end: { column: 0, line: 1 },
-                            start: { column: 0, line: 1 },
-                        },
-                        messageId: "tombiFormat",
-                        node: context.sourceCode.ast,
-                        ...(shouldOfferFormatFix &&
-                            bridgeResult.formattedText !== "" && {
-                                fix: (fixer) =>
-                                    fixer.replaceTextRange(
-                                        [0, context.sourceCode.text.length],
-                                        bridgeResult.formattedText
-                                    ),
-                            }),
-                    });
-                }
-
-                if (shouldLint) {
-                    for (const diagnostic of bridgeResult.diagnostics) {
-                        context.report({
-                            data: {
-                                severity: diagnostic.severity,
-                                text: diagnostic.message,
-                            },
-                            loc: toEslintLoc(diagnostic),
-                            messageId: "tombiProblem",
-                            node: context.sourceCode.ast,
-                        });
-                    }
-                }
-            },
-        }),
+            }
+        };
+        return toRuleListener({ Program: program });
+    },
     meta: {
         defaultOptions: [{}],
         deprecated: false,
@@ -198,6 +194,7 @@ const tombiRule: RuleModuleWithDocs<MessageIds, Options> = createTypedRule<
             url: "https://nick2bad4u.github.io/eslint-plugin-tombi/docs/rules/tombi",
         },
         fixable: "whitespace",
+        languages: ["js/js", "toml/toml"],
         messages: {
             tombiExecutionError: "Tombi execution error: {{message}}",
             tombiFormat: "Tombi formatting differs from this file.",
