@@ -4,6 +4,8 @@
 
 `eslint-plugin-tombi` runs the native Tombi CLI from ESLint, then reports TOML lint and format findings through normal ESLint formatters, editors, and CI annotations.
 
+> **Oxlint:** Not compatible as a complete plugin (verified with Oxlint 1.80.0); all 7 rules and every preset target TOML or Cargo lockfiles through `toml-eslint-parser`, and [Oxlint JavaScript plugins do not support custom parsers](https://oxc.rs/docs/guide/usage/linter/js-plugins.html#api-support), so use ESLint for this bridge.
+
 ## Installation
 
 ```sh
