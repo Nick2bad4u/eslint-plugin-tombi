@@ -169,7 +169,7 @@
         "typescript-eslint": "^8.67.0",
         "vite": "^8.2.1",
         "vite-tsconfig-paths": "^6.1.1",
-        "vitest": "^4.1.10",
+        "vitest": "^5.0.1",
         "yamllint-config-nick2bad4u": "^1.1.1"
     },
     "peerDependencies": {
